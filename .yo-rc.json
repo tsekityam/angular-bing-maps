@@ -1,0 +1,30 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Stephen Morrow",
+        "email": "smorrow@credera.com"
+      },
+      "libraryName": {
+        "original": "Angular Bing Maps",
+        "camelized": "angularBingMaps",
+        "dasherized": "-angular-bing-maps",
+        "slugified": "angular-bing-maps",
+        "parts": [
+          "angular",
+          "bing",
+          "maps"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/-angular-bing-maps",
+      "libraryUnitTestDirectory": "test/unit/-angular-bing-maps",
+      "libraryUnitE2eDirectory": "test/e2e/-angular-bing-maps"
+    }
+  }
+}
