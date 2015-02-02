@@ -3,12 +3,29 @@
     <head>
         
         <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+        <script src="scripts/DrawingToolsModule.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <script src="../bower/angular/angular.min.js"></script>
+
         <script src="../dist/angular-bing-maps.js"></script>
         
         <script type="text/javascript">
-            angular.module('angularBingMapExample', 
-                ['angularBingMaps']);
+            var app = angular.module('angularBingMapExample', ['angularBingMaps']);
+            app.controller('ExampleController', function($scope) {
+
+                $scope.mapOptions = {};
+                $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
+                $scope.mapOptions.zoom = 6;
+                $scope.mapOptions.mapType = 'a';
+
+                $scope.drawing = {};
+                $scope.drawing.onShapeChange = function(shape) {
+                    console.log('User drew this shape: ');
+                    console.log(shape);
+                    $scope.drawing.currentShape = null;
+                }
+                $scope.drawing.currentShape = "circle";
+            });
         </script>
         
         <style type="text/css">
@@ -20,6 +37,29 @@
         
     </head>
     <body ng-app="angularBingMapExample">
-        <bing-map credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"></bing-map>
+
+        <div class="bing-map-container" ng-controller="ExampleController">
+            <bing-map
+                      credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"
+                      center="mapOptions.center"
+                      zoom="mapOptions.zoom"
+                      mapType="mapOptions.mapType">
+                <drawing-tools
+                     on-shape-change="drawing.onShapeChange(shapes)"
+                     draw-this-shape="drawing.currentShape">
+                </drawing-tools>
+            </bing-map>
+
+            <div class="drawing-controls pull-right">
+                <div class="btn-group btn-group-lg" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default" ng-click="drawing.currentShape = 'circle'" ng-class="{active:drawing.currentShape=='circle'}">Circle</button>
+                    <button type="button" class="btn btn-default" ng-click="drawing.currentShape = 'rectangle'" ng-class="{active:drawing.currentShape=='rectangle'}">Square</button>
+                    <button type="button" class="btn btn-default" ng-click="drawing.currentShape = 'polygon'" ng-class="{active:drawing.currentShape=='polygon'}">Free-Form</button>
+                    <button type="button" class="btn btn-danger" ng-click="drawing.currentShape = null">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+
     </body>
 </html>
