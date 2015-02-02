@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        
+        <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+        <script src="../bower/angular/angular.min.js"></script>
+        <script src="../dist/angular-bing-maps.js"></script>
+        
+        <script type="text/javascript">
+            angular.module('angularBingMapExample', 
+                ['angularBingMaps']);
+        </script>
+        
+        <style type="text/css">
+            bing-map {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+        
+    </head>
+    <body ng-app="angularBingMapExample">
+        <bing-map credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"></bing-map>
+    </body>
+</html>
