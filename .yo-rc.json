@@ -8,7 +8,7 @@
       "libraryName": {
         "original": "Angular Bing Maps",
         "camelized": "angularBingMaps",
-        "dasherized": "-angular-bing-maps",
+        "dasherized": "angular-bing-maps",
         "slugified": "angular-bing-maps",
         "parts": [
           "angular",
@@ -22,9 +22,9 @@
       "includeAngularModuleResource": false,
       "includeAngularModuleCookies": false,
       "includeAngularModuleSanitize": false,
-      "librarySrcDirectory": "src/-angular-bing-maps",
-      "libraryUnitTestDirectory": "test/unit/-angular-bing-maps",
-      "libraryUnitE2eDirectory": "test/e2e/-angular-bing-maps"
+      "librarySrcDirectory": "src/angular-bing-maps",
+      "libraryUnitTestDirectory": "test/unit/angular-bing-maps",
+      "libraryUnitE2eDirectory": "test/e2e/angular-bing-maps"
     }
   }
 }

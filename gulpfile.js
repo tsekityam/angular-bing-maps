@@ -30,10 +30,10 @@ var sourceFiles = [
 gulp.task('build', function() {
   gulp.src(sourceFiles)
     .pipe(plumber())
-    .pipe(concat('-angular-bing-maps.js'))
+    .pipe(concat('angular-bing-maps.js'))
     .pipe(gulp.dest('./dist/'))
     .pipe(uglify())
-    .pipe(rename('-angular-bing-maps.min.js'))
+    .pipe(rename('angular-bing-maps.min.js'))
     .pipe(gulp.dest('./dist'))
 });
 
