@@ -13,18 +13,27 @@
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
             app.controller('ExampleController', function($scope) {
 
+                /*<bing-map> directive options*/
                 $scope.mapOptions = {};
                 $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
                 $scope.mapOptions.zoom = 6;
                 $scope.mapOptions.mapType = 'a';
 
+                /*<drawing-tools> directive options*/
                 $scope.drawing = {};
                 $scope.drawing.onShapeChange = function(shape) {
                     console.log('User drew this shape: ');
                     console.log(shape);
                     $scope.drawing.currentShape = null;
                 }
-                $scope.drawing.currentShape = "circle";
+                $scope.drawing.currentShape = null;
+
+                /*<pushpin> directive options*/
+                $scope.pushpin = {};
+                $scope.pushpin.location = {latitude: 30.614919,longitude: -96.342316};
+                $scope.pushpin.options = {
+                    draggable: true
+                }
             });
         </script>
         
@@ -48,8 +57,13 @@
                      on-shape-change="drawing.onShapeChange(shapes)"
                      draw-this-shape="drawing.currentShape">
                 </drawing-tools>
+                <pushpin
+                    lat="pushpin.location.latitude"
+                    lng="pushpin.location.longitude"
+                    options="pushpin.options"></pushpin>
             </bing-map>
 
+            <!-- Custom set of drawing controls -->
             <div class="drawing-controls pull-right">
                 <div class="btn-group btn-group-lg" role="group" aria-label="...">
                     <button type="button" class="btn btn-default" ng-click="drawing.currentShape = 'circle'" ng-class="{active:drawing.currentShape=='circle'}">Circle</button>

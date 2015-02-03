@@ -3,15 +3,12 @@
 function drawingToolsDirective() {
     'use strict';
 
-    function link(scope, element, attrs) {
+    function link(scope, element, attrs, mapCtrl) {
         if (typeof DrawingTools === 'undefined') {
             console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
             return;
         }
-        //TODO: Fix this....
-        var parentScope = scope.$parent.$parent;
-
-        scope.drawingManager = new DrawingTools.DrawingManager(parentScope.bing.map, {
+        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, {
             events: {
                 drawingEnded: function (shapes) {
                     scope.onShapeChange({shapes: shapes});
