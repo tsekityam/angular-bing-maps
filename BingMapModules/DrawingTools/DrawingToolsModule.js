@@ -1,3 +1,6 @@
+/**
+    MODIFIED from original version to fix a bug with toolbar rendering
+*/
 /****************************************************************************
 * Author: Ricky Brundritt
 * Website: http://rbrundritt.wordpress.com
@@ -1100,8 +1103,10 @@ var DrawingTools = {
                         }
                     }
                 }
-
-                toolbarContainer.appendChild(toolbar);
+                //MODIFIED FROM ORIGINAL VERSION!
+                //toolbarContainer was not defined (nor should it have been)
+                //toolbarContainer.appendChild(toolbar);
+                _options.toolbarContainer.appendChild(toolbar);
             }
         }
 

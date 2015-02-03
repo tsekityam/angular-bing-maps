@@ -26,7 +26,7 @@
 
 /*global angular, Microsoft, DrawingTools, console*/
 
-function drawingToolsDirective() {
+function drawingToolbarDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
@@ -56,6 +56,57 @@ function drawingToolsDirective() {
         template: '<div ng-transclude></div>',
         restrict: 'EA',
         transclude: true,
+        scope: {
+            onShapeChange: '&',
+            drawThisShape: '='
+        },
+        require: '^bingMap'
+    };
+
+}
+
+angular.module('angularBingMaps.directives').directive('drawingToolbar', drawingToolbarDirective);
+
+/*global angular, Microsoft, DrawingTools, console*/
+
+function drawingToolsDirective() {
+    'use strict';
+
+    function link(scope, element, attrs, mapCtrl) {
+        if (typeof DrawingTools === 'undefined') {
+            console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
+            return;
+        }
+        var toolbarOptions = {
+            events: {
+                drawingEnded: function (shapes) {
+                    scope.onShapeChange({shapes: shapes});
+                    scope.$apply();
+                }
+            }
+        };
+        if(attrs.hasOwnProperty('withToolbar')) {
+            toolbarOptions['toolbarContainer'] = element[0];
+        }
+        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, toolbarOptions);
+        
+        scope.$watch('drawThisShape', function (shape) {
+            if (shape === 'none') {
+                scope.drawingManager.setDrawingMode(null);
+            } else {
+                scope.drawingManager.setDrawingMode(shape);
+            }
+        });
+    }
+    
+    function ctrl($scope, $element) {
+        
+    }
+
+    return {
+        link: link,
+        controller: ctrl,
+        restrict: 'EA',
         scope: {
             onShapeChange: '&',
             drawThisShape: '='

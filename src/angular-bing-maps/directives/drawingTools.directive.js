@@ -8,14 +8,19 @@ function drawingToolsDirective() {
             console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
             return;
         }
-        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, {
+        var toolbarOptions = {
             events: {
                 drawingEnded: function (shapes) {
                     scope.onShapeChange({shapes: shapes});
                     scope.$apply();
                 }
             }
-        });
+        };
+        if(attrs.hasOwnProperty('withToolbar')) {
+            toolbarOptions['toolbarContainer'] = element[0];
+        }
+        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, toolbarOptions);
+        
         scope.$watch('drawThisShape', function (shape) {
             if (shape === 'none') {
                 scope.drawingManager.setDrawingMode(null);
@@ -24,12 +29,15 @@ function drawingToolsDirective() {
             }
         });
     }
+    
+    function ctrl($scope, $element) {
+        
+    }
 
     return {
         link: link,
-        template: '<div ng-transclude></div>',
+        controller: ctrl,
         restrict: 'EA',
-        transclude: true,
         scope: {
             onShapeChange: '&',
             drawThisShape: '='

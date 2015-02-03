@@ -3,7 +3,8 @@
     <head>
         
         <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
-        <script src="scripts/DrawingToolsModule.js"></script>
+        <script src="../BingMapModules/DrawingTools/DrawingToolsModule.js"></script>
+        <link rel="stylesheet" href="../BingMapModules/DrawingTools/DrawingToolsModule.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <script src="../bower/angular/angular.min.js"></script>
 
@@ -42,6 +43,16 @@
                 height: 100%;
                 width: 100%;
             }
+            .drawing-controls {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+            drawing-tools[with-toolbar] {
+                position: absolute;
+                z-index: 1;
+                right: 0;
+            }
         </style>
         
     </head>
@@ -55,7 +66,8 @@
                       mapType="mapOptions.mapType">
                 <drawing-tools
                      on-shape-change="drawing.onShapeChange(shapes)"
-                     draw-this-shape="drawing.currentShape">
+                     draw-this-shape="drawing.currentShape"
+                     with-toolbar>
                 </drawing-tools>
                 <pushpin
                     lat="pushpin.location.latitude"
