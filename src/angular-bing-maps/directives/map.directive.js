@@ -9,9 +9,9 @@ function bingMapDirective() {
         transclude: true,
         scope: {
             credentials: '=',
-            center: '=',
-            zoom: '=',
-            mapType: '='
+            center: '=?',
+            zoom: '=?',
+            mapType: '=?'
         },
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller

@@ -34,7 +34,7 @@ function pushpinDirective() {
         restrict: 'EA',
         transclude: true,
         scope: {
-            options: '=',
+            options: '=?',
             lat: '=',
             lng: '='
         },

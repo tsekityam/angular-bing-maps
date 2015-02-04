@@ -35,6 +35,15 @@
                 $scope.pushpin.options = {
                     draggable: true
                 }
+
+                /*<tile-layer> directive options*/
+                $scope.tileLayer = {};
+                $scope.tileLayer.source = function (tile) {
+                    return 'http://lorempixel.com/100/100?cache=' + tile.x + tile.y + tile.levelOfDetail;
+                }
+                $scope.tileLayer.options = {
+                    opacity: 0.1
+                }
             });
         </script>
         
@@ -60,19 +69,27 @@
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map
-                      credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"
-                      center="mapOptions.center"
-                      zoom="mapOptions.zoom"
-                      mapType="mapOptions.mapType">
+                credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"
+                center="mapOptions.center"
+                zoom="mapOptions.zoom"
+                mapType="mapOptions.mapType">
+
                 <drawing-tools
                      on-shape-change="drawing.onShapeChange(shapes)"
                      draw-this-shape="drawing.currentShape"
                      with-toolbar>
                 </drawing-tools>
+
                 <pushpin
                     lat="pushpin.location.latitude"
                     lng="pushpin.location.longitude"
-                    options="pushpin.options"></pushpin>
+                    options="pushpin.options">
+                </pushpin>
+
+                <tile-layer
+                    source="tileLayer.source"
+                    options="tileLayer.options">
+                </tile-layer>
             </bing-map>
 
             <!-- Custom set of drawing controls -->
