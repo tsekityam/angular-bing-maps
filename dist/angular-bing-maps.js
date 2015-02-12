@@ -55,14 +55,9 @@ function drawingToolsDirective() {
             }
         });
     }
-    
-    function ctrl($scope, $element) {
-        
-    }
 
     return {
         link: link,
-        controller: ctrl,
         restrict: 'EA',
         scope: {
             onShapeChange: '&',
@@ -82,7 +77,7 @@ function geoJsonDirective() {
 
     function link(scope, element, attrs, mapCtrl) {
         if (typeof GeoJSONModule === 'undefined') {
-            console.log('You have not loaded the GeoJSONModule. Please include this script and try again');
+            console.log('You have not loaded the GeoJSONModule.js. Please include this script and try again');
             return;
         }
         Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes');
@@ -95,12 +90,13 @@ function geoJsonDirective() {
         scope.$watch('model', function () {
             if (scope.model) {
                 geoJsonModule.ImportGeoJSON(scope.model, function (newEntityCollection, bounds) {
+                    //Take everything out of the newEntityCollection that the GeoJSON module gave us
+                    //and put it in our own for better control over the entity
                     var entity = newEntityCollection.pop();
                     while (entity) {
                         entityCollection.push(entity);
                         entity = newEntityCollection.pop();
                     }
-
                 });
             } else {
                 entityCollection.clear();
@@ -111,9 +107,7 @@ function geoJsonDirective() {
 
     return {
         link: link,
-        template: '<div ng-transclude></div>',
         restrict: 'EA',
-        transclude: true,
         scope: {
             model: '='
         },
@@ -283,9 +277,7 @@ function polygonDirective() {
 
     return {
         link: link,
-        template: '<div ng-transclude></div>',
         restrict: 'EA',
-        transclude: true,
         scope: {
             options: '=?',
             locations: '=',

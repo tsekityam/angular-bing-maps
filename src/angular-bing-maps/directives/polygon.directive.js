@@ -44,9 +44,7 @@ function polygonDirective() {
 
     return {
         link: link,
-        template: '<div ng-transclude></div>',
         restrict: 'EA',
-        transclude: true,
         scope: {
             options: '=?',
             locations: '=',

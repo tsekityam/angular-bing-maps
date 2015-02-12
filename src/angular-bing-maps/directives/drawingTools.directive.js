@@ -29,14 +29,9 @@ function drawingToolsDirective() {
             }
         });
     }
-    
-    function ctrl($scope, $element) {
-        
-    }
 
     return {
         link: link,
-        controller: ctrl,
         restrict: 'EA',
         scope: {
             onShapeChange: '&',
