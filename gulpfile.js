@@ -7,6 +7,8 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var map = require('map-stream');
+var notify = require('gulp-notify');
 
 /**
  * File patterns
@@ -56,13 +58,15 @@ gulp.task('watch', function () {
 /**
  * Validate source JavaScript
  */
-
 gulp.task('jshint-src', function () {
   return gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'))
+//    .on('error', notify.onError(function (error) {
+//      return error.message;
+//    }));
 });
 
 /**
