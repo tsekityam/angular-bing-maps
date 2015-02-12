@@ -2,9 +2,11 @@
 <html>
     <head>
         
+        <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
         <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
         <script src="../BingMapModules/DrawingTools/DrawingToolsModule.js"></script>
         <link rel="stylesheet" href="../BingMapModules/DrawingTools/DrawingToolsModule.css">
+        <script src="../BingMapModules/GeoJSON/GeoJSONModule.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <script src="../bower/angular/angular.min.js"></script>
 
@@ -12,7 +14,7 @@
         
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope) {
+            app.controller('ExampleController', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
@@ -35,6 +37,20 @@
                 $scope.pushpin.options = {
                     draggable: true
                 }
+                $scope.pushpin.events = {
+                    click: function() {
+                        $scope.infobox.visible = !$scope.infobox.visible;
+                    }
+                };
+
+                $scope.infobox = {};
+                $scope.infobox.options = {
+                    offset: new Microsoft.Maps.Point(0,25),
+                    width: 125,
+                    height: 50
+                };
+                $scope.infobox.title = 'Gig\' Em!';
+                $scope.infobox.visible = true;
 
                 /*<tile-layer> directive options*/
                 $scope.tileLayer = {};
@@ -49,6 +65,11 @@
                 $scope.polygon.locations = [{latitude:35.08906058576126,longitude:-94.67239412499998},{latitude:31.770841429575057,longitude:-94.62844881249998},{latitude:31.770841429575057,longitude:-93.79348787499998},{latitude:33.234716518470485,longitude:-93.83743318749998},{latitude:33.21633594601856,longitude:-92.71682771874998},{latitude:31.789519833501316,longitude:-92.58499178124998},{latitude:31.808194464296854,longitude:-91.75003084374998},{latitude:35.07107926967833,longitude:-91.94778474999998},{latitude:35.03510475037247,longitude:-92.78274568749998},{latitude:33.78433267069338,longitude:-92.76077303124998},{latitude:33.80259300113746,longitude:-93.90335115624998},{latitude:35.10703793826693,longitude:-93.99124178124998},{latitude:35.08906058576126,longitude:-94.67239412499998}];
                 $scope.polygon.strokeColor = '#4d1010';
                 $scope.polygon.fillColor = '#FFFFFF';
+
+                var geoJsonUrl = 'Polygon.geo.json';
+                $http.get(geoJsonUrl).then(function(response) {
+                    $scope.geoJson = response.data;
+                });
             });
         </script>
         
@@ -79,6 +100,8 @@
                 zoom="mapOptions.zoom"
                 mapType="mapOptions.mapType">
 
+                <geo-json model="geoJson"></geo-json>
+
                 <drawing-tools
                      on-shape-change="drawing.onShapeChange(shapes)"
                      draw-this-shape="drawing.currentShape"
@@ -88,7 +111,12 @@
                 <pushpin
                     lat="pushpin.location.latitude"
                     lng="pushpin.location.longitude"
-                    options="pushpin.options">
+                    options="pushpin.options"
+                    events="pushpin.events">
+                    <info-box
+                        options="infobox.options"
+                        title="infobox.title"
+                        visible="infobox.visible"></info-box>
                 </pushpin>
 
                 <tile-layer
@@ -101,6 +129,7 @@
                     stroke-color="polygon.strokeColor"
                     fill-color="polygon.fillColor">
                 </polygon>
+
             </bing-map>
 
             <!-- Custom set of drawing controls -->

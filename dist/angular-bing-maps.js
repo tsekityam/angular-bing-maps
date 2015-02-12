@@ -75,6 +75,129 @@ function drawingToolsDirective() {
 
 angular.module('angularBingMaps.directives').directive('drawingTools', drawingToolsDirective);
 
+/*global angular, Microsoft, GeoJSONModule, console*/
+
+function geoJsonDirective() {
+    'use strict';
+
+    function link(scope, element, attrs, mapCtrl) {
+        if (typeof GeoJSONModule === 'undefined') {
+            console.log('You have not loaded the GeoJSONModule. Please include this script and try again');
+            return;
+        }
+        Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes');
+
+        var geoJsonModule = new GeoJSONModule(),
+            entityCollection = new Microsoft.Maps.EntityCollection();
+
+        mapCtrl.map.entities.push(entityCollection);
+
+        scope.$watch('model', function () {
+            if (scope.model) {
+                geoJsonModule.ImportGeoJSON(scope.model, function (newEntityCollection, bounds) {
+                    var entity = newEntityCollection.pop();
+                    while (entity) {
+                        entityCollection.push(entity);
+                        entity = newEntityCollection.pop();
+                    }
+
+                });
+            } else {
+                entityCollection.clear();
+            }
+        });
+
+    }
+
+    return {
+        link: link,
+        template: '<div ng-transclude></div>',
+        restrict: 'EA',
+        transclude: true,
+        scope: {
+            model: '='
+        },
+        require: '^bingMap'
+    };
+
+}
+
+angular.module('angularBingMaps.directives').directive('geoJson', geoJsonDirective);
+
+/*global angular, Microsoft, DrawingTools, console*/
+
+function infoBoxDirective() {
+    'use strict';
+
+    function link(scope, element, attrs, ctrls) {
+        var infobox = new Microsoft.Maps.Infobox(),
+            pushpinCtrl = ctrls[1];
+
+        function updateLocation() {
+            infobox.setLocation(new Microsoft.Maps.Location(scope.lat, scope.lng));
+        }
+        function updateOptions() {
+            if (!scope.options) {
+                scope.options = {};
+            }
+            if (scope.title) {
+                scope.options.title = scope.title;
+            }
+            if (scope.description) {
+                scope.options.description = scope.description;
+            }
+            if (scope.hasOwnProperty('visible')) {
+                scope.options.visible = scope.visible;
+            } else {
+                scope.options.visible = true;
+            }
+
+            //TODO: Define a default offset for the default infobox to prevent overlapping default marker??? Maybe....
+
+            infobox.setOptions(scope.options);
+        }
+
+        scope.$on('positionUpdated', function(event, location) {
+           infobox.setLocation(location);
+        });
+
+        if (!pushpinCtrl) {
+            scope.$watch('lat', updateLocation);
+            scope.$watch('lng', updateLocation);
+        }
+
+        scope.$watch('options', updateOptions);
+        scope.$watch('title', updateOptions);
+        scope.$watch('description', updateOptions);
+        scope.$watch('visible', updateOptions);
+
+        ctrls[0].map.entities.push(infobox);
+
+        /*Need a way to set visible = false when close button clicked. This is not working*/
+//        Microsoft.Maps.Events.addHandler(infobox, 'entitychanged', function(event) {
+//            scope.visible = event.entity.getVisible();
+//            scope.$apply();
+//        });
+    }
+
+    return {
+        link: link,
+        restrict: 'EA',
+        scope: {
+            options: '=?',
+            lat: '=?',
+            lng: '=?',
+            title: '=?',
+            description: '=?',
+            visible: '=?'
+        },
+        require: ['^bingMap', '?^pushpin']
+    };
+
+}
+
+angular.module('angularBingMaps.directives').directive('infoBox', infoBoxDirective);
+
 /*global angular, Microsoft*/
 
 function bingMapDirective() {
@@ -182,39 +305,61 @@ function pushpinDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
-        var pin = new Microsoft.Maps.Pushpin();
 
         function updatePosition() {
             if (scope.lat && scope.lng) {
-                pin.setLocation(new Microsoft.Maps.Location(scope.lat, scope.lng));
+                scope.pin.setLocation(new Microsoft.Maps.Location(scope.lat, scope.lng));
+                scope.$broadcast('positionUpdated', scope.pin.getLocation());
             }
         }
 
         updatePosition();
-        mapCtrl.map.entities.push(pin);
+        mapCtrl.map.entities.push(scope.pin);
         scope.$watch('lat', updatePosition);
         scope.$watch('lng', updatePosition);
         scope.$watch('options', function (newOptions) {
-            pin.setOptions(newOptions);
+            scope.pin.setOptions(newOptions);
         });
 
-        Microsoft.Maps.Events.addHandler(pin, 'dragend', function (e) {
+        Microsoft.Maps.Events.addHandler(scope.pin, 'dragend', function (e) {
             var loc = e.entity.getLocation();
             scope.lat = loc.latitude;
             scope.lng = loc.longitude;
             scope.$apply();
         });
+
+        function isValidEvent(event) {
+            //TODO: Implement me like one of your french girls
+            return true;
+        }
+
+        for(var event in scope.events) {
+            if(isValidEvent(event)) {
+                //TODO: Do we need to clean up these handlers?
+                Microsoft.Maps.Events.addHandler(scope.pin, event, function(e) {
+                    scope.events[e.eventName]();
+                    scope.$apply();
+                });
+            }
+        }
     }
+
+
 
     return {
         link: link,
+        controller: function ($scope) {
+            this.pin = new Microsoft.Maps.Pushpin();
+            $scope.pin = this.pin;
+        },
         template: '<div ng-transclude></div>',
         restrict: 'EA',
         transclude: true,
         scope: {
             options: '=?',
             lat: '=',
-            lng: '='
+            lng: '=',
+            events: '=?'
         },
         require: '^bingMap'
     };
