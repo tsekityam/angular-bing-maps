@@ -10,7 +10,7 @@ function polygonDirective() {
             for (var i=0;i<scope.locations.length;i++) {
                 if (angular.isArray(scope.locations[i])) {
                     bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i][0], scope.locations[i][1])
+                        new Microsoft.Maps.Location(scope.locations[i][1], scope.locations[i][0])
                     );
                 } else {
                     bingMapLocations.push(
