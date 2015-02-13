@@ -8,9 +8,15 @@ function polygonDirective() {
         function generateBingMapLocations() {
             bingMapLocations = [];
             for (var i=0;i<scope.locations.length;i++) {
-                bingMapLocations.push(
-                    new Microsoft.Maps.Location(scope.locations[i].latitude, scope.locations[i].longitude)
-                );
+                if (angular.isArray(scope.locations[i])) {
+                    bingMapLocations.push(
+                        new Microsoft.Maps.Location(scope.locations[i][0], scope.locations[i][1])
+                    );
+                } else {
+                    bingMapLocations.push(
+                        new Microsoft.Maps.Location(scope.locations[i].latitude, scope.locations[i].longitude)
+                    );
+                }
             }
         }
         generateBingMapLocations();
