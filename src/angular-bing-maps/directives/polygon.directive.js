@@ -46,6 +46,9 @@ function polygonDirective() {
         });
         scope.$watch('fillColor', generateOptions);
         scope.$watch('strokeColor', generateOptions);
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(polygon);
+        });
     }
 
     return {
