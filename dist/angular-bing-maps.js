@@ -103,6 +103,10 @@ function geoJsonDirective() {
             }
         });
 
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(entityCollection);
+        });
+
     }
 
     return {
@@ -172,6 +176,10 @@ function infoBoxDirective() {
 //            scope.visible = event.entity.getVisible();
 //            scope.$apply();
 //        });
+
+        scope.$on('$destroy', function() {
+            ctrls[0].map.entities.remove(infobox);
+        });
     }
 
     return {
@@ -343,6 +351,10 @@ function pushpinDirective() {
                 });
             }
         }
+
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(scope.pin);
+        });
     }
 
 
@@ -402,6 +414,9 @@ function tileLayerDirective() {
 
         scope.$watch('options', createTileSource);
         scope.$watch('source', createTileSource);
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(tileLayer);
+        });
     }
 
     return {

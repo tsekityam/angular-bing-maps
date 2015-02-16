@@ -52,6 +52,10 @@ function infoBoxDirective() {
 //            scope.visible = event.entity.getVisible();
 //            scope.$apply();
 //        });
+
+        scope.$on('$destroy', function() {
+            ctrls[0].map.entities.remove(infobox);
+        });
     }
 
     return {

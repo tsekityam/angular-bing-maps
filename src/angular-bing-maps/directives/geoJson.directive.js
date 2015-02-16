@@ -31,6 +31,10 @@ function geoJsonDirective() {
             }
         });
 
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(entityCollection);
+        });
+
     }
 
     return {
