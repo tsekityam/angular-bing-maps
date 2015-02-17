@@ -7,14 +7,17 @@
       "email": "smorrow@credera.com"
     }
   ],
-  "main": ["dist/angular-bing-maps.js"],
+  "main": [
+    "dist/angular-bing-maps.js"
+  ],
   "ignore": [
     "src",
     "test",
     "Gruntfile.js",
     "**/.*"
   ],
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "angular-mocks": ">=1.2.0",
     "angular-scenario": ">=1.2.0",

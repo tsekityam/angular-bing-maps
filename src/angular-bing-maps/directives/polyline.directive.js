@@ -1,6 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-function polygonDirective() {
+function polylineDirective() {
     'use strict';
     var color = require('color');
 
@@ -22,16 +22,12 @@ function polygonDirective() {
         }
         generateBingMapLocations();
 
-        var polygon = new Microsoft.Maps.Polygon(bingMapLocations);
-        mapCtrl.map.entities.push(polygon);
-
+        var polyline = new Microsoft.Maps.Polyline(bingMapLocations);
+        mapCtrl.map.entities.push(polyline);
 
         function generateOptions() {
             if(!scope.options) {
                 scope.options = {};
-            }
-            if (scope.fillColor) {
-                scope.options.fillColor = makeMicrosoftColor(scope.fillColor);
             }
             if (scope.strokeColor) {
                 scope.options.strokeColor = makeMicrosoftColor(scope.strokeColor);
@@ -44,16 +40,15 @@ function polygonDirective() {
         }
 
         scope.$watch('options', function (newOptions) {
-            polygon.setOptions(newOptions);
+            polyline.setOptions(newOptions);
         });
         scope.$watch('locations', function() {
             generateBingMapLocations();
-            polygon.setLocations(bingMapLocations);
+            polyline.setLocations(bingMapLocations);
         });
-        scope.$watch('fillColor', generateOptions);
         scope.$watch('strokeColor', generateOptions);
         scope.$on('$destroy', function() {
-            mapCtrl.map.entities.remove(polygon);
+            mapCtrl.map.entities.remove(polyline);
         });
     }
 
@@ -63,7 +58,6 @@ function polygonDirective() {
         scope: {
             options: '=?',
             locations: '=',
-            fillColor: '=?',
             strokeColor: '=?'
         },
         require: '^bingMap'
@@ -71,4 +65,4 @@ function polygonDirective() {
 
 }
 
-angular.module('angularBingMaps.directives').directive('polygon', polygonDirective);
+angular.module('angularBingMaps.directives').directive('polyline', polylineDirective);
