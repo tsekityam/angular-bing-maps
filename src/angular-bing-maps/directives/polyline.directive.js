@@ -1,24 +1,12 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-function polylineDirective() {
+function polylineDirective(MapUtils) {
     'use strict';
-    var color = require('color');
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
         function generateBingMapLocations() {
-            bingMapLocations = [];
-            for (var i=0;i<scope.locations.length;i++) {
-                if (angular.isArray(scope.locations[i])) {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i][1], scope.locations[i][0])
-                    );
-                } else {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i].latitude, scope.locations[i].longitude)
-                    );
-                }
-            }
+            bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
         generateBingMapLocations();
 
@@ -30,13 +18,8 @@ function polylineDirective() {
                 scope.options = {};
             }
             if (scope.strokeColor) {
-                scope.options.strokeColor = makeMicrosoftColor(scope.strokeColor);
+                scope.options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
             }
-        }
-
-        function makeMicrosoftColor(colorStr) {
-            var c = color(colorStr);
-            return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
         }
 
         scope.$watch('options', function (newOptions) {

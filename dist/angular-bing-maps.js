@@ -160,6 +160,7 @@ function infoBoxDirective() {
            infobox.setLocation(location);
         });
 
+        //This was not the child of a pushpin, so use the lat & lng
         if (!pushpinCtrl) {
             scope.$watch('lat', updateLocation);
             scope.$watch('lng', updateLocation);
@@ -242,47 +243,29 @@ angular.module('angularBingMaps.directives').directive('bingMap', bingMapDirecti
 
 /*global angular, Microsoft, DrawingTools, console*/
 
-function polygonDirective() {
+function polygonDirective(MapUtils) {
     'use strict';
-    var color = require('color');
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
         function generateBingMapLocations() {
-            bingMapLocations = [];
-            for (var i=0;i<scope.locations.length;i++) {
-                if (angular.isArray(scope.locations[i])) {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i][1], scope.locations[i][0])
-                    );
-                } else {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i].latitude, scope.locations[i].longitude)
-                    );
-                }
-            }
+            bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
         generateBingMapLocations();
 
         var polygon = new Microsoft.Maps.Polygon(bingMapLocations);
         mapCtrl.map.entities.push(polygon);
 
-
         function generateOptions() {
             if(!scope.options) {
                 scope.options = {};
             }
             if (scope.fillColor) {
-                scope.options.fillColor = makeMicrosoftColor(scope.fillColor);
+                scope.options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
             }
             if (scope.strokeColor) {
-                scope.options.strokeColor = makeMicrosoftColor(scope.strokeColor);
+                scope.options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
             }
-        }
-
-        function makeMicrosoftColor(colorStr) {
-            var c = color(colorStr);
-            return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
         }
 
         scope.$watch('options', function (newOptions) {
@@ -317,25 +300,13 @@ angular.module('angularBingMaps.directives').directive('polygon', polygonDirecti
 
 /*global angular, Microsoft, DrawingTools, console*/
 
-function polylineDirective() {
+function polylineDirective(MapUtils) {
     'use strict';
-    var color = require('color');
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
         function generateBingMapLocations() {
-            bingMapLocations = [];
-            for (var i=0;i<scope.locations.length;i++) {
-                if (angular.isArray(scope.locations[i])) {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i][1], scope.locations[i][0])
-                    );
-                } else {
-                    bingMapLocations.push(
-                        new Microsoft.Maps.Location(scope.locations[i].latitude, scope.locations[i].longitude)
-                    );
-                }
-            }
+            bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
         generateBingMapLocations();
 
@@ -347,13 +318,8 @@ function polylineDirective() {
                 scope.options = {};
             }
             if (scope.strokeColor) {
-                scope.options.strokeColor = makeMicrosoftColor(scope.strokeColor);
+                scope.options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
             }
-        }
-
-        function makeMicrosoftColor(colorStr) {
-            var c = color(colorStr);
-            return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
         }
 
         scope.$watch('options', function (newOptions) {
@@ -510,6 +476,53 @@ function tileLayerDirective() {
 }
 
 angular.module('angularBingMaps.directives').directive('tileLayer', tileLayerDirective);
+
+/*global angular, Microsoft, DrawingTools, console*/
+
+function mapUtilsService() {
+    'use strict';
+    var color = require('color');
+
+    function makeMicrosoftColor(colorStr) {
+        var c = color(colorStr);
+        return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
+    }
+
+    function makeMicrosoftLatLng(location) {
+        if (angular.isArray(location)) {
+            return new Microsoft.Maps.Location(location[1], location[0]);
+        } else if (location.hasOwnProperty('latitude') && location.hasOwnProperty('longitude')) {
+            return new Microsoft.Maps.Location(location.latitude, location.longitude);
+        } else if (location.hasOwnProperty('lat') && location.hasOwnProperty('lng')) {
+            return new Microsoft.Maps.Location(location.lat, location.lng);
+        } else {
+            if(console && console.error) {
+                console.error('Your coordinates are in a non-standard form. '+
+                              'Please refer to the Angular Bing Maps '+
+                              'documentation to see supported coordinate formats');
+            }
+            return null;
+        }
+    }
+
+    function convertToMicrosoftLatLngs(locations) {
+        var bingLocations = [];
+        for (var i=0;i<locations.length;i++) {
+            var latLng = makeMicrosoftLatLng(locations[i]);
+            bingLocations.push(latLng);
+        }
+        return bingLocations;
+    }
+
+    return {
+        makeMicrosoftColor: makeMicrosoftColor,
+        makeMicrosoftLatLng: makeMicrosoftLatLng,
+        convertToMicrosoftLatLngs: convertToMicrosoftLatLngs
+    };
+
+}
+
+angular.module('angularBingMaps.services').service('MapUtils', mapUtilsService);
 
 },{"color":2}],2:[function(require,module,exports){
 /* MIT license */

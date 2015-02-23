@@ -56,6 +56,7 @@
                 $scope.tileLayer = {};
                 $scope.tileLayer.source = function (tile) {
                     return 'http://lorempixel.com/100/100?cache=' + tile.x + tile.y + tile.levelOfDetail;
+                    //return 'http://localhost:3001/water-districts/' + tile.levelOfDetail + '/' + tile.x + '/' + tile.y + '/tile.png';
                 }
                 $scope.tileLayer.options = {
                     opacity: 0.1
@@ -67,6 +68,7 @@
                 $scope.polygon.fillColor = 'rgba(255,255,255,0.5)';
 
                 var geoJsonUrl = 'Polygon.geo.json';
+                //var geoJsonUrl = 'http://localhost:3001/water-districts/'
                 $http.get(geoJsonUrl).then(function(response) {
                     $scope.geoJson = response.data;
                 });

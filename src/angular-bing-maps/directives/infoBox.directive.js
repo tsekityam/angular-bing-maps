@@ -35,6 +35,7 @@ function infoBoxDirective() {
            infobox.setLocation(location);
         });
 
+        //This was not the child of a pushpin, so use the lat & lng
         if (!pushpinCtrl) {
             scope.$watch('lat', updateLocation);
             scope.$watch('lng', updateLocation);
