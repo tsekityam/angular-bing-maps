@@ -41,6 +41,10 @@ function pushpinDirective() {
                 });
             }
         }
+
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(scope.pin);
+        });
     }
 
 

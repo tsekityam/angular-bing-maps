@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        
+        <meta name="apple-mobile-web-app-capable" content="yes">
         <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
         <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
         <script src="../BingMapModules/DrawingTools/DrawingToolsModule.js"></script>
@@ -56,6 +56,7 @@
                 $scope.tileLayer = {};
                 $scope.tileLayer.source = function (tile) {
                     return 'http://lorempixel.com/100/100?cache=' + tile.x + tile.y + tile.levelOfDetail;
+                    //return 'http://localhost:3001/water-districts/' + tile.levelOfDetail + '/' + tile.x + '/' + tile.y + '/tile.png';
                 }
                 $scope.tileLayer.options = {
                     opacity: 0.1
@@ -64,12 +65,17 @@
                 $scope.polygon = {};
                 $scope.polygon.locations = [{latitude:35.08906058576126,longitude:-94.67239412499998},{latitude:31.770841429575057,longitude:-94.62844881249998},{latitude:31.770841429575057,longitude:-93.79348787499998},{latitude:33.234716518470485,longitude:-93.83743318749998},{latitude:33.21633594601856,longitude:-92.71682771874998},{latitude:31.789519833501316,longitude:-92.58499178124998},{latitude:31.808194464296854,longitude:-91.75003084374998},{latitude:35.07107926967833,longitude:-91.94778474999998},{latitude:35.03510475037247,longitude:-92.78274568749998},{latitude:33.78433267069338,longitude:-92.76077303124998},{latitude:33.80259300113746,longitude:-93.90335115624998},{latitude:35.10703793826693,longitude:-93.99124178124998},{latitude:35.08906058576126,longitude:-94.67239412499998}];
                 $scope.polygon.strokeColor = '#4d1010';
-                $scope.polygon.fillColor = '#FFFFFF';
+                $scope.polygon.fillColor = 'rgba(255,255,255,0.5)';
 
                 var geoJsonUrl = 'Polygon.geo.json';
+                //var geoJsonUrl = 'http://localhost:3001/water-districts/'
                 $http.get(geoJsonUrl).then(function(response) {
                     $scope.geoJson = response.data;
                 });
+
+                $scope.polyline = {};
+                $scope.polyline.locations = [{"latitude":34.86400954439419,"longitude":-90.27786287499998},{"latitude":31.948133803753898,"longitude":-90.16799959374998},{"latitude":31.873525941061587,"longitude":-91.20071443749998},{"latitude":31.948133803753898,"longitude":-89.00344881249998},{"latitude":32.004049978763646,"longitude":-90.21194490624998},{"latitude":35.00811346319084,"longitude":-90.32180818749998},{"latitude":34.97211122247478,"longitude":-88.98147615624998},{"latitude":34.990114322142375,"longitude":-91.50833162499998},{"latitude":34.990114322142375,"longitude":-91.48635896874998}];
+                $scope.polyline.strokeColor = '#4d1010';
             });
         </script>
         
@@ -129,6 +135,11 @@
                     stroke-color="polygon.strokeColor"
                     fill-color="polygon.fillColor">
                 </polygon>
+
+                <polyline
+                    locations="polyline.locations"
+                    stroke-color="polyline.strokeColor">
+                </polyline>
 
             </bing-map>
 

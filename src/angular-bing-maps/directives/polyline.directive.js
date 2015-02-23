@@ -1,6 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-function polygonDirective(MapUtils) {
+function polylineDirective(MapUtils) {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
@@ -10,15 +10,12 @@ function polygonDirective(MapUtils) {
         }
         generateBingMapLocations();
 
-        var polygon = new Microsoft.Maps.Polygon(bingMapLocations);
-        mapCtrl.map.entities.push(polygon);
+        var polyline = new Microsoft.Maps.Polyline(bingMapLocations);
+        mapCtrl.map.entities.push(polyline);
 
         function generateOptions() {
             if(!scope.options) {
                 scope.options = {};
-            }
-            if (scope.fillColor) {
-                scope.options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
             }
             if (scope.strokeColor) {
                 scope.options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
@@ -26,16 +23,15 @@ function polygonDirective(MapUtils) {
         }
 
         scope.$watch('options', function (newOptions) {
-            polygon.setOptions(newOptions);
+            polyline.setOptions(newOptions);
         });
         scope.$watch('locations', function() {
             generateBingMapLocations();
-            polygon.setLocations(bingMapLocations);
+            polyline.setLocations(bingMapLocations);
         });
-        scope.$watch('fillColor', generateOptions);
         scope.$watch('strokeColor', generateOptions);
         scope.$on('$destroy', function() {
-            mapCtrl.map.entities.remove(polygon);
+            mapCtrl.map.entities.remove(polyline);
         });
     }
 
@@ -45,7 +41,6 @@ function polygonDirective(MapUtils) {
         scope: {
             options: '=?',
             locations: '=',
-            fillColor: '=?',
             strokeColor: '=?'
         },
         require: '^bingMap'
@@ -53,4 +48,4 @@ function polygonDirective(MapUtils) {
 
 }
 
-angular.module('angularBingMaps.directives').directive('polygon', polygonDirective);
+angular.module('angularBingMaps.directives').directive('polyline', polylineDirective);

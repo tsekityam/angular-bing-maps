@@ -31,6 +31,9 @@ function tileLayerDirective() {
 
         scope.$watch('options', createTileSource);
         scope.$watch('source', createTileSource);
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(tileLayer);
+        });
     }
 
     return {

@@ -35,6 +35,7 @@ function infoBoxDirective() {
            infobox.setLocation(location);
         });
 
+        //This was not the child of a pushpin, so use the lat & lng
         if (!pushpinCtrl) {
             scope.$watch('lat', updateLocation);
             scope.$watch('lng', updateLocation);
@@ -52,6 +53,10 @@ function infoBoxDirective() {
 //            scope.visible = event.entity.getVisible();
 //            scope.$apply();
 //        });
+
+        scope.$on('$destroy', function() {
+            ctrls[0].map.entities.remove(infobox);
+        });
     }
 
     return {
