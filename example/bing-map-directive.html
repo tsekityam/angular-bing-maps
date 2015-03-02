@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
+
+        <script src="../dist/angular-bing-maps.js"></script>
+
+        <script type="text/javascript">
+            var app = angular.module('angularBingMapExample', ['angularBingMaps']);
+            app.controller('ExampleController', function($scope, $http) {
+
+                /*<bing-map> directive options*/
+                $scope.mapOptions = {};
+                $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
+                $scope.mapOptions.zoom = 6;
+                $scope.mapOptions.mapType = 'a';
+
+            });
+        </script>
+
+        <style type="text/css">
+            bing-map {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+
+    </head>
+    <body ng-app="angularBingMapExample">
+
+        <div class="bing-map-container" ng-controller="ExampleController">
+            <bing-map
+                credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"
+                center="mapOptions.center"
+                zoom="mapOptions.zoom"
+                mapType="mapOptions.mapType">
+            </bing-map>
+
+        </div>
+
+    </body>
+</html>

@@ -29,7 +29,7 @@ function tileLayerDirective() {
             }
         }
 
-        scope.$watch('options', createTileSource);
+        scope.$watch('options', createTileSource, true);
         scope.$watch('source', createTileSource);
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(tileLayer);
