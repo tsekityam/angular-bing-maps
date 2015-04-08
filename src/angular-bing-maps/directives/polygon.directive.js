@@ -5,6 +5,7 @@ function polygonDirective(MapUtils) {
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
+        var eventHandlers = {};
         function generateBingMapLocations() {
             bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
@@ -37,6 +38,21 @@ function polygonDirective(MapUtils) {
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(polygon);
         });
+        
+        scope.$watch('events', function(events) {
+            //Loop through each event handler
+            angular.forEach(events, function(usersHandler, eventName) {
+                //If we already created an event handler, remove it
+                if(eventHandlers.hasOwnProperty(eventName)) {
+                    Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                }
+                var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
+                    usersHandler(event);
+                    scope.$apply();
+                });
+                eventHandlers[eventName] = bingMapsHandler;
+            });
+        });
     }
 
     return {
@@ -46,7 +62,9 @@ function polygonDirective(MapUtils) {
             options: '=?',
             locations: '=',
             fillColor: '=?',
-            strokeColor: '=?'
+            strokeColor: '=?',
+            opacity: '=?',
+            events: '=?'
         },
         require: '^bingMap'
     };

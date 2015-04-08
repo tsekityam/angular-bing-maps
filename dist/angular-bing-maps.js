@@ -248,6 +248,7 @@ function polygonDirective(MapUtils) {
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
+        var eventHandlers = {};
         function generateBingMapLocations() {
             bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
@@ -280,6 +281,21 @@ function polygonDirective(MapUtils) {
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(polygon);
         });
+        
+        scope.$watch('events', function(events) {
+            //Loop through each event handler
+            angular.forEach(events, function(usersHandler, eventName) {
+                //If we already created an event handler, remove it
+                if(eventHandlers.hasOwnProperty(eventName)) {
+                    Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                }
+                var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
+                    usersHandler(event);
+                    scope.$apply();
+                });
+                eventHandlers[eventName] = bingMapsHandler;
+            });
+        });
     }
 
     return {
@@ -289,7 +305,9 @@ function polygonDirective(MapUtils) {
             options: '=?',
             locations: '=',
             fillColor: '=?',
-            strokeColor: '=?'
+            strokeColor: '=?',
+            opacity: '=?',
+            events: '=?'
         },
         require: '^bingMap'
     };
@@ -454,7 +472,7 @@ function tileLayerDirective() {
             }
         }
 
-        scope.$watch('options', createTileSource);
+        scope.$watch('options', createTileSource, true);
         scope.$watch('source', createTileSource);
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(tileLayer);
@@ -1677,11 +1695,11 @@ for (var func in conversions) {
   // export rgb2hsl and ["rgb"]["hsl"]
   convert[from] = convert[from] || {};
 
-  convert[from][to] = convert[func] = (function(func) {
+  convert[from][to] = convert[func] = (function(func) { 
     return function(arg) {
       if (typeof arg == "number")
         arg = Array.prototype.slice.call(arguments);
-
+      
       var val = conversions[func](arg);
       if (typeof val == "string" || val === undefined)
         return val; // keyword
@@ -1709,12 +1727,12 @@ Converter.prototype.routeSpace = function(space, args) {
    }
    // color.rgb(10, 10, 10)
    if (typeof values == "number") {
-      values = Array.prototype.slice.call(args);
+      values = Array.prototype.slice.call(args);        
    }
 
    return this.setValues(space, values);
 };
-
+  
 /* Set the values for a space, invalidating cache */
 Converter.prototype.setValues = function(space, values) {
    this.space = space;
