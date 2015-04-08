@@ -290,6 +290,10 @@ function polygonDirective(MapUtils) {
                     Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
                 }
                 var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
+                    //As a convenience, add tracker id to target attribute for user to ID target of event
+                    if(scope.trackBy) {
+                        event.target['trackBy'] = scope.trackBy;
+                    }
                     usersHandler(event);
                     scope.$apply();
                 });
@@ -307,7 +311,8 @@ function polygonDirective(MapUtils) {
             fillColor: '=?',
             strokeColor: '=?',
             opacity: '=?',
-            events: '=?'
+            events: '=?',
+            trackBy: '=?'
         },
         require: '^bingMap'
     };
