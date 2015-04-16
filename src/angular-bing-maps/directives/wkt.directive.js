@@ -12,34 +12,58 @@ function wktDirective(MapUtils) {
         var entity = null;
         var eventHandlers = [];
         
-        scope.$watch('text', function (shape) {
-            if(shape && typeof shape === 'string') {
-                //REad it and add it to the mao
-                entity = WKTModule.Read(shape);
-                if(entity instanceof Microsoft.Maps.EntityCollection) {
-                    //Make sure it's flat, for case of GeographyCollection
-                    entity = MapUtils.flattenEntityCollection(entity);
+        MapUtils.loadAdvancedShapesModule().then(function() {
+            
+            scope.$watch('text', function (shape) {
+                if(entity) {
+                    //Something is already on the map, remove that
+                    mapCtrl.map.entities.remove(entity);
                 }
-                mapCtrl.map.entities.push(entity);
-            } else {
-                mapCtrl.map.entities.remove(entity);
-            }
-        }, true);
-        
-        scope.$watch('events', function(events) {
-            removeAllHandlers();
-            //Loop through each event handler
-            angular.forEach(events, function(usersHandler, eventName) {
-                if(entity instanceof Microsoft.Maps.EntityCollection) {
-                    //Add the handler to all entities in collection
-                    for(var i=0;i<entity.getLength();i++) {
-                        addHandler(entity.get(i), eventName, usersHandler);
+                if(shape && typeof shape === 'string') {
+                    //Raad it and add it to the mao
+                    entity = WKTModule.Read(shape);
+                    mapCtrl.map.entities.push(entity);
+                }
+            }, true);
+            
+            scope.$watch('events', function(events) {
+                removeAllHandlers();
+                //Loop through each event handler
+                angular.forEach(events, function(usersHandler, eventName) {
+                    if(entity instanceof Microsoft.Maps.EntityCollection) {
+                        //Add the handler to all entities in collection
+                        for(var i=0;i<entity.getLength();i++) {
+                            addHandler(entity.get(i), eventName, usersHandler);
+                        }
+                    } else {
+                        addHandler(entity, eventName, usersHandler);
                     }
-                } else {
-                    addHandler(entity, eventName, usersHandler);
-                }
+                });
             });
+            
+            scope.$watch('fillColor', setOptions, true);
+            
+            scope.$watch('strokeColor', setOptions, true);
         });
+        
+        function setOptions() {
+            var options = {};
+            if(scope.fillColor) {
+                options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
+            }
+            if(scope.strokeColor) {
+                options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
+            }
+            if(entity instanceof Microsoft.Maps.EntityCollection) {
+                for(var i=0;i<entity.getLength();i++) {
+                    if(entity.get(i) instanceof Microsoft.Maps.Polygon) {
+                        entity.get(i).setOptions(options);
+                    }
+                }
+            } else {
+                entity.setOptions(options);
+            }
+        }
         
         function addHandler(target, eventName, userHandler) {
             var handler = Microsoft.Maps.Events.addHandler(target, eventName, function(event) {
@@ -51,6 +75,7 @@ function wktDirective(MapUtils) {
             });
             eventHandlers.push(handler);
         }
+            
         function removeAllHandlers() {
             var handler = eventHandlers.pop();
             while(typeof handler === 'function') {
@@ -58,6 +83,11 @@ function wktDirective(MapUtils) {
                 handler = eventHandlers.pop();
             }
         }
+
+        
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(entity);
+        });
     }
 
     return {
@@ -65,8 +95,10 @@ function wktDirective(MapUtils) {
         restrict: 'EA',
         scope: {
             text: '=',
-            events: '=',
-            trackBy: '='
+            events: '=?',
+            trackBy: '=?',
+            fillColor: '=?',
+            strokeColor: '=?'
         },
         require: '^bingMap'
     };

@@ -67,7 +67,6 @@ function polygonDirective(MapUtils) {
             locations: '=',
             fillColor: '=?',
             strokeColor: '=?',
-            opacity: '=?',
             events: '=?',
             trackBy: '=?'
         },

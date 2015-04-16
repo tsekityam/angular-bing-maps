@@ -1,8 +1,9 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-function mapUtilsService() {
+function mapUtilsService($q) {
     'use strict';
     var color = require('color');
+    var advancedShapesLoaded = false;
 
     function makeMicrosoftColor(colorStr) {
         var c = color(colorStr);
@@ -62,12 +63,25 @@ function mapUtilsService() {
         }
         return flat;
     }
+    
+    function loadAdvancedShapesModule() {
+        var defered = $q.defer();
+        if(!advancedShapesLoaded) {
+            Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes', { callback: function(){
+                defered.resolve();
+            }});
+        } else {
+            defered.resolve();
+        }
+        return defered.promise;
+    }
 
     return {
         makeMicrosoftColor: makeMicrosoftColor,
         makeMicrosoftLatLng: makeMicrosoftLatLng,
         convertToMicrosoftLatLngs: convertToMicrosoftLatLngs,
-        flattenEntityCollection: flattenEntityCollection
+        flattenEntityCollection: flattenEntityCollection,
+        loadAdvancedShapesModule: loadAdvancedShapesModule
     };
 
 }

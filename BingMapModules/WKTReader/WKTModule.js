@@ -119,7 +119,7 @@ var WKTModule = new function () {
         var rings = [];
 
         for (var i in wktRings) {
-            rings = rings.concat(ParseRing(wktRings[i]));
+            rings.push(ParseRing(wktRings[i]));
         }
 
         return new Microsoft.Maps.Polygon(rings, styles.polygonOptions);
