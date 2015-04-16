@@ -22,6 +22,11 @@ function wktDirective(MapUtils) {
                 if(shape && typeof shape === 'string') {
                     //Raad it and add it to the mao
                     entity = WKTModule.Read(shape);
+                    // It's unclear to me if we need to call MapUtils.flattenEntityCollection()
+                    // to ensure all subsequent loops through
+                    // entitycollections do not have nested entitycollections. 
+                    // It works as-is with test data, so not flattening
+                    setOptions();
                     mapCtrl.map.entities.push(entity);
                 }
             }, true);
@@ -47,6 +52,9 @@ function wktDirective(MapUtils) {
         });
         
         function setOptions() {
+            //Entity not parsed yet
+            if(!entity) {return;}
+            
             var options = {};
             if(scope.fillColor) {
                 options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
