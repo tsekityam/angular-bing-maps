@@ -28,6 +28,10 @@ function drawingToolsDirective() {
                 scope.drawingManager.setDrawingMode(shape);
             }
         });
+        
+        scope.$on('DRAWINGTOOLS.CLEAR', function() {
+            scope.drawingManager.clear();
+        });
     }
 
     return {
