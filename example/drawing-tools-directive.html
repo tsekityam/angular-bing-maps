@@ -27,6 +27,8 @@
                     $scope.drawing.currentShape = null;
                 }
                 $scope.drawing.currentShape = null;
+                $scope.drawing.fillColor = 'rgba(131, 71, 71, 0.52)';
+                $scope.drawing.strokeColor = '#000';
             });
         </script>
 
@@ -62,6 +64,8 @@
                 <drawing-tools
                      on-shape-change="drawing.onShapeChange(shapes)"
                      draw-this-shape="drawing.currentShape"
+                     stroke-color="drawing.strokeColor"
+                     fill-color="drawing.fillColor"
                      with-toolbar>
                 </drawing-tools>
 
