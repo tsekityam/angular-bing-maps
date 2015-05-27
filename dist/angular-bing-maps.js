@@ -580,7 +580,7 @@ function wktDirective(MapUtils) {
                 }
                 if(shape && typeof shape === 'string') {
                     //Raad it and add it to the mao
-                    entity = WKTModule.Read(shape);
+                    entity = WKTModule.Read(shape, scope.styles);
                     // It's unclear to me if we need to call MapUtils.flattenEntityCollection()
                     // to ensure all subsequent loops through
                     // entitycollections do not have nested entitycollections. 
@@ -665,7 +665,8 @@ function wktDirective(MapUtils) {
             events: '=?',
             trackBy: '=?',
             fillColor: '=?',
-            strokeColor: '=?'
+            strokeColor: '=?',
+            styles: '=?'
         },
         require: '^bingMap'
     };
