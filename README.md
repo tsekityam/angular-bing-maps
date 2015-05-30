@@ -5,7 +5,7 @@ This is a project that Credera is developing as part of a client engagement. All
 
 ##Getting Started
   1. Obtain source code for angular-bing-maps
-    * Via Bower 'bower install angular-bing-maps --save'
+    * Via Bower `bower install angular-bing-maps --save`
     * Via git `git clone git@github.com:Credera/angular-bing-maps.git`
   2. Include /dist/angular-bing-maps.min.js in your HTML source
     * `<script type="text/javascript" src="bower_components/angular-bing-maps/dist/angular-bing-maps.min.js"></script>`
@@ -27,7 +27,7 @@ Proper documentation is in our road map, but currently not implemented. Please v
   * `<polygon>`
   * `<polyline>`
   * `<tile-layer>`
-  * `<geo-json>`
+  * `<geo-json>` :star:
     * Using Earthware Ltd.'s Bing Maps GeoJSON Module from http://bingmapsv7modules.codeplex.com/wikipage?title=GeoJSON%20Module
   * `<wkt>` :star:[(Well-Known Text)](http://en.wikipedia.org/wiki/Well-known_text)
     * Using Ricky Brundritt's Bing Maps WKT Read/Write Module http://bingmapsv7modules.codeplex.com/wikipage?title=Well%20Known%20Text%20Reader%2fWriter
