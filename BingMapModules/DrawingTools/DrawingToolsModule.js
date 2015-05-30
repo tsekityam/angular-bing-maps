@@ -340,7 +340,7 @@ var DrawingTools = {
             setOptions(options);
         };
 
-        this.setDrawingMode = function (mode) {
+        this.setDrawingMode = function (mode, handleEsc) {
             /// <summary>Sets drawing mode and lets you start drawing. If the mode is set to null then the current drawing mode is completed.</summary>
             /// <param name='mode' type='DrawingTools.DrawingMode'></param>
 
@@ -349,7 +349,7 @@ var DrawingTools = {
             }
 
             // End any previous drawing state
-            endDrawing();
+            endDrawing(handleEsc);
 
             drawingMode = mode;
 
@@ -423,7 +423,7 @@ var DrawingTools = {
                 eventIds.push(Microsoft.Maps.Events.addHandler(map, 'keyup', function (e) {
                     //Stop drawing when ESC button pressed.
                     if (e.keyCode == '27') {
-                        self.setDrawingMode(null);
+                        self.setDrawingMode(null, true);
                     }
                 }));
             }
@@ -457,7 +457,7 @@ var DrawingTools = {
             }
         }
 
-        function endDrawing() {
+        function endDrawing(handleEsc) {
             for (var i = 0; i < eventIds.length; i++) {
                 Microsoft.Maps.Events.removeHandler(eventIds[i]);
             }
@@ -490,7 +490,7 @@ var DrawingTools = {
                 currentShape.setLocations(locs);
 
                 if (_options.events && _options.events.drawingEnded &&
-                    (drawingMode == 'polygon' || drawingMode == 'polyline')) {
+                    (drawingMode == 'polygon' || drawingMode == 'polyline' || handleEsc)) {
                     _options.events.drawingEnded(currentShape);
                 }
             }

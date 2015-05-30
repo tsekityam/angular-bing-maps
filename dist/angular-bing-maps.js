@@ -27,7 +27,7 @@
 
 /*global angular, Microsoft, DrawingTools, console*/
 
-function drawingToolsDirective() {
+function drawingToolsDirective(MapUtils) {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
@@ -35,7 +35,8 @@ function drawingToolsDirective() {
             console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
             return;
         }
-        var toolbarOptions = {
+        
+        var options = {
             events: {
                 drawingEnded: function (shapes) {
                     scope.onShapeChange({shapes: shapes});
@@ -44,9 +45,27 @@ function drawingToolsDirective() {
             }
         };
         if(attrs.hasOwnProperty('withToolbar')) {
-            toolbarOptions['toolbarContainer'] = element[0];
+            options['toolbarContainer'] = element[0];
         }
-        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, toolbarOptions);
+
+        function setOptions() {
+            if(scope.strokeColor) {
+                if(!options.hasOwnProperty('shapeOptions')) {
+                    options.shapeOptions = {};
+                }
+                options.shapeOptions.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
+            }
+            if(scope.fillColor) {
+                if(!options.hasOwnProperty('shapeOptions')) {
+                    options.shapeOptions = {};
+                }
+                options.shapeOptions.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
+            }
+            scope.drawingManager.setOptions(options);
+        }
+        
+        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map);
+        setOptions();
         
         scope.$watch('drawThisShape', function (shape) {
             if (shape === 'none') {
@@ -55,6 +74,10 @@ function drawingToolsDirective() {
                 scope.drawingManager.setDrawingMode(shape);
             }
         });
+        
+        scope.$on('DRAWINGTOOLS.CLEAR', function() {
+            scope.drawingManager.clear();
+        });
     }
 
     return {
@@ -62,7 +85,9 @@ function drawingToolsDirective() {
         restrict: 'EA',
         scope: {
             onShapeChange: '&',
-            drawThisShape: '='
+            drawThisShape: '=',
+            strokeColor: '=?',
+            fillColor: '=?'
         },
         require: '^bingMap'
     };
@@ -215,12 +240,15 @@ function bingMapDirective() {
             credentials: '=',
             center: '=?',
             zoom: '=?',
-            mapType: '=?'
+            mapType: '=?',
+            events: '=?'
         },
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
             this.map = new Microsoft.Maps.Map($element[0], {credentials: $scope.credentials});
+            
+            var eventHandlers = {};
             $scope.map = this.map;
 
             $scope.$watch('center', function (center) {
@@ -233,6 +261,21 @@ function bingMapDirective() {
 
             $scope.$watch('mapType', function (mapTypeId) {
                 $scope.map.setView({animate: true, mapTypeId: mapTypeId});
+            });
+            
+            $scope.$watch('events', function (events) {
+                //Loop through each event handler
+                angular.forEach(events, function (usersHandler, eventName) {
+                    //If we already created an event handler, remove it
+                    if (eventHandlers.hasOwnProperty(eventName)) {
+                        Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                    }
+                    var bingMapsHandler = Microsoft.Maps.Events.addHandler($scope.map, eventName, function (event) {
+                        usersHandler(event);
+                        $scope.$apply();
+                    });
+                    eventHandlers[eventName] = bingMapsHandler;
+                });
             });
         }
     };
@@ -248,6 +291,7 @@ function polygonDirective(MapUtils) {
 
     function link(scope, element, attrs, mapCtrl) {
         var bingMapLocations = [];
+        var eventHandlers = {};
         function generateBingMapLocations() {
             bingMapLocations = MapUtils.convertToMicrosoftLatLngs(scope.locations);
         }
@@ -280,6 +324,25 @@ function polygonDirective(MapUtils) {
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(polygon);
         });
+        
+        scope.$watch('events', function(events) {
+            //Loop through each event handler
+            angular.forEach(events, function(usersHandler, eventName) {
+                //If we already created an event handler, remove it
+                if(eventHandlers.hasOwnProperty(eventName)) {
+                    Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                }
+                var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
+                    //As a convenience, add tracker id to target attribute for user to ID target of event
+                    if(scope.trackBy) {
+                        event.target['trackBy'] = scope.trackBy;
+                    }
+                    usersHandler(event);
+                    scope.$apply();
+                });
+                eventHandlers[eventName] = bingMapsHandler;
+            });
+        });
     }
 
     return {
@@ -289,7 +352,9 @@ function polygonDirective(MapUtils) {
             options: '=?',
             locations: '=',
             fillColor: '=?',
-            strokeColor: '=?'
+            strokeColor: '=?',
+            events: '=?',
+            trackBy: '=?'
         },
         require: '^bingMap'
     };
@@ -356,6 +421,8 @@ function pushpinDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
+        
+        var eventHandlers = {};
 
         function updatePosition() {
             if (scope.lat && scope.lng) {
@@ -371,6 +438,24 @@ function pushpinDirective() {
         scope.$watch('options', function (newOptions) {
             scope.pin.setOptions(newOptions);
         });
+        scope.$watch('events', function(events) {
+            //Loop through each event handler
+            angular.forEach(events, function(usersHandler, eventName) {
+                //If we already created an event handler, remove it
+                if(eventHandlers.hasOwnProperty(eventName)) {
+                    Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                }
+                var bingMapsHandler = Microsoft.Maps.Events.addHandler(scope.pin, eventName, function(event) {
+                    //As a convenience, add tracker id to target attribute for user to ID target of event
+                    if(scope.trackBy) {
+                        event.target['trackBy'] = scope.trackBy;
+                    }
+                    usersHandler(event);
+                    scope.$apply();
+                });
+                eventHandlers[eventName] = bingMapsHandler;
+            });
+        });
 
         Microsoft.Maps.Events.addHandler(scope.pin, 'dragend', function (e) {
             var loc = e.entity.getLocation();
@@ -384,18 +469,12 @@ function pushpinDirective() {
             return true;
         }
 
-        for(var event in scope.events) {
-            if(isValidEvent(event)) {
-                //TODO: Do we need to clean up these handlers?
-                Microsoft.Maps.Events.addHandler(scope.pin, event, function(e) {
-                    scope.events[e.eventName]();
-                    scope.$apply();
-                });
-            }
-        }
-
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(scope.pin);
+            //Is this necessary? Doing it just to be safe
+            angular.forEach(eventHandlers, function(handler, eventName) {
+                Microsoft.Maps.Events.removeHandler(handler);
+            });
         });
     }
 
@@ -414,7 +493,8 @@ function pushpinDirective() {
             options: '=?',
             lat: '=',
             lng: '=',
-            events: '=?'
+            events: '=?',
+            trackBy: '=?'
         },
         require: '^bingMap'
     };
@@ -477,11 +557,130 @@ function tileLayerDirective() {
 
 angular.module('angularBingMaps.directives').directive('tileLayer', tileLayerDirective);
 
+/*global angular, Microsoft, DrawingTools, console, WKTModule*/
+
+function wktDirective(MapUtils) {
+    'use strict';
+
+    function link(scope, element, attrs, mapCtrl) {
+        if (typeof WKTModule === 'undefined') {
+            console.log('You did not include WKTModule.js. Please include this script and try again');
+            return;
+        }
+        
+        var entity = null;
+        var eventHandlers = [];
+        
+        MapUtils.loadAdvancedShapesModule().then(function() {
+            
+            scope.$watch('text', function (shape) {
+                if(entity) {
+                    //Something is already on the map, remove that
+                    mapCtrl.map.entities.remove(entity);
+                }
+                if(shape && typeof shape === 'string') {
+                    //Raad it and add it to the mao
+                    entity = WKTModule.Read(shape, scope.styles);
+                    // It's unclear to me if we need to call MapUtils.flattenEntityCollection()
+                    // to ensure all subsequent loops through
+                    // entitycollections do not have nested entitycollections. 
+                    // It works as-is with test data, so not flattening
+                    setOptions();
+                    mapCtrl.map.entities.push(entity);
+                }
+            }, true);
+            
+            scope.$watch('events', function(events) {
+                removeAllHandlers();
+                //Loop through each event handler
+                angular.forEach(events, function(usersHandler, eventName) {
+                    if(entity instanceof Microsoft.Maps.EntityCollection) {
+                        //Add the handler to all entities in collection
+                        for(var i=0;i<entity.getLength();i++) {
+                            addHandler(entity.get(i), eventName, usersHandler);
+                        }
+                    } else {
+                        addHandler(entity, eventName, usersHandler);
+                    }
+                });
+            });
+            
+            scope.$watch('fillColor', setOptions, true);
+            
+            scope.$watch('strokeColor', setOptions, true);
+        });
+        
+        function setOptions() {
+            //Entity not parsed yet
+            if(!entity) {return;}
+            
+            var options = {};
+            if(scope.fillColor) {
+                options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
+            }
+            if(scope.strokeColor) {
+                options.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
+            }
+            if(entity instanceof Microsoft.Maps.EntityCollection) {
+                for(var i=0;i<entity.getLength();i++) {
+                    if(entity.get(i) instanceof Microsoft.Maps.Polygon) {
+                        entity.get(i).setOptions(options);
+                    }
+                }
+            } else {
+                entity.setOptions(options);
+            }
+        }
+        
+        function addHandler(target, eventName, userHandler) {
+            var handler = Microsoft.Maps.Events.addHandler(target, eventName, function(event) {
+                if(scope.trackBy) {
+                    event.target['trackBy'] = scope.trackBy;
+                }
+                userHandler(event);
+                scope.$apply();
+            });
+            eventHandlers.push(handler);
+        }
+            
+        function removeAllHandlers() {
+            var handler = eventHandlers.pop();
+            while(typeof handler === 'function') {
+                Microsoft.Maps.Events.removeHandler(handler);
+                handler = eventHandlers.pop();
+            }
+        }
+
+        
+        scope.$on('$destroy', function() {
+            mapCtrl.map.entities.remove(entity);
+        });
+    }
+
+    return {
+        link: link,
+        restrict: 'EA',
+        scope: {
+            text: '=',
+            events: '=?',
+            trackBy: '=?',
+            fillColor: '=?',
+            strokeColor: '=?',
+            styles: '=?'
+        },
+        require: '^bingMap'
+    };
+
+}
+
+angular.module('angularBingMaps.directives').directive('wkt', wktDirective);
+
 /*global angular, Microsoft, DrawingTools, console*/
 
-function mapUtilsService() {
+function mapUtilsService($q) {
     'use strict';
     var color = require('color');
+    var advancedShapesLoaded = false;
 
     function makeMicrosoftColor(colorStr) {
         var c = color(colorStr);
@@ -507,17 +706,59 @@ function mapUtilsService() {
 
     function convertToMicrosoftLatLngs(locations) {
         var bingLocations = [];
+        if (!locations) {
+            return bingLocations;
+        }
         for (var i=0;i<locations.length;i++) {
             var latLng = makeMicrosoftLatLng(locations[i]);
             bingLocations.push(latLng);
         }
         return bingLocations;
     }
+    
+    function flattenEntityCollection(ec) {
+        var flat = flattenEntityCollectionRecursive(ec);
+        var flatEc = new Microsoft.Maps.EntityCollection();
+        var entity = flat.pop();
+        while(entity) {
+            flatEc.push(entity);
+            entity = flat.pop();
+        }
+        return flatEc;
+    }
+    
+    function flattenEntityCollectionRecursive(ec) {
+        var flat = [];
+        var entity = ec.pop();
+        while(entity) {
+            if (entity && !(entity instanceof Microsoft.Maps.EntityCollection)) {
+                flat.push(entity);
+            } else if (entity) {
+                flat.concat(flattenEntityCollectionRecursive(entity));
+            }
+            entity = ec.pop();
+        }
+        return flat;
+    }
+    
+    function loadAdvancedShapesModule() {
+        var defered = $q.defer();
+        if(!advancedShapesLoaded) {
+            Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes', { callback: function(){
+                defered.resolve();
+            }});
+        } else {
+            defered.resolve();
+        }
+        return defered.promise;
+    }
 
     return {
         makeMicrosoftColor: makeMicrosoftColor,
         makeMicrosoftLatLng: makeMicrosoftLatLng,
-        convertToMicrosoftLatLngs: convertToMicrosoftLatLngs
+        convertToMicrosoftLatLngs: convertToMicrosoftLatLngs,
+        flattenEntityCollection: flattenEntityCollection,
+        loadAdvancedShapesModule: loadAdvancedShapesModule
     };
 
 }

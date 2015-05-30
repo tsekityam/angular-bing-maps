@@ -27,6 +27,8 @@
                     $scope.drawing.currentShape = null;
                 }
                 $scope.drawing.currentShape = null;
+                $scope.drawing.fillColor = 'rgba(131, 71, 71, 0.52)';
+                $scope.drawing.strokeColor = '#000';
             });
         </script>
 
@@ -54,7 +56,7 @@
         <!--  If you use the built-in drawing controls, remember to include /BingMapModules/DrawingTools/DrawingToolsModule.css -->
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map
-                credentials="'Ao5xSIWVcSkykhWG2CSM1YMj7MaHEMVEbxKXj3GaG-F-ZqNSxlGGaIo1G_N_Eeo5'"
+                credentials="'AkaxzD5YOJCbIvziHVOLfm6AkeM5Z5UQ3dHS53mQzwK-6LGWnxYjAwNqfe3D4UBT'"
                 center="mapOptions.center"
                 zoom="mapOptions.zoom"
                 mapType="mapOptions.mapType">
@@ -62,6 +64,8 @@
                 <drawing-tools
                      on-shape-change="drawing.onShapeChange(shapes)"
                      draw-this-shape="drawing.currentShape"
+                     stroke-color="drawing.strokeColor"
+                     fill-color="drawing.fillColor"
                      with-toolbar>
                 </drawing-tools>
 

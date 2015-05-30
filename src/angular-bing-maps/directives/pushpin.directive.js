@@ -4,6 +4,8 @@ function pushpinDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
+        
+        var eventHandlers = {};
 
         function updatePosition() {
             if (scope.lat && scope.lng) {
@@ -19,6 +21,24 @@ function pushpinDirective() {
         scope.$watch('options', function (newOptions) {
             scope.pin.setOptions(newOptions);
         });
+        scope.$watch('events', function(events) {
+            //Loop through each event handler
+            angular.forEach(events, function(usersHandler, eventName) {
+                //If we already created an event handler, remove it
+                if(eventHandlers.hasOwnProperty(eventName)) {
+                    Microsoft.Maps.Events.removeHandler(eventHandlers[eventName]);
+                }
+                var bingMapsHandler = Microsoft.Maps.Events.addHandler(scope.pin, eventName, function(event) {
+                    //As a convenience, add tracker id to target attribute for user to ID target of event
+                    if(scope.trackBy) {
+                        event.target['trackBy'] = scope.trackBy;
+                    }
+                    usersHandler(event);
+                    scope.$apply();
+                });
+                eventHandlers[eventName] = bingMapsHandler;
+            });
+        });
 
         Microsoft.Maps.Events.addHandler(scope.pin, 'dragend', function (e) {
             var loc = e.entity.getLocation();
@@ -32,18 +52,12 @@ function pushpinDirective() {
             return true;
         }
 
-        for(var event in scope.events) {
-            if(isValidEvent(event)) {
-                //TODO: Do we need to clean up these handlers?
-                Microsoft.Maps.Events.addHandler(scope.pin, event, function(e) {
-                    scope.events[e.eventName]();
-                    scope.$apply();
-                });
-            }
-        }
-
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(scope.pin);
+            //Is this necessary? Doing it just to be safe
+            angular.forEach(eventHandlers, function(handler, eventName) {
+                Microsoft.Maps.Events.removeHandler(handler);
+            });
         });
     }
 
@@ -62,7 +76,8 @@ function pushpinDirective() {
             options: '=?',
             lat: '=',
             lng: '=',
-            events: '=?'
+            events: '=?',
+            trackBy: '=?'
         },
         require: '^bingMap'
     };

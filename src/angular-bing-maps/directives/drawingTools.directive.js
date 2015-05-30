@@ -1,6 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-function drawingToolsDirective() {
+function drawingToolsDirective(MapUtils) {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
@@ -8,7 +8,8 @@ function drawingToolsDirective() {
             console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
             return;
         }
-        var toolbarOptions = {
+        
+        var options = {
             events: {
                 drawingEnded: function (shapes) {
                     scope.onShapeChange({shapes: shapes});
@@ -17,9 +18,27 @@ function drawingToolsDirective() {
             }
         };
         if(attrs.hasOwnProperty('withToolbar')) {
-            toolbarOptions['toolbarContainer'] = element[0];
+            options['toolbarContainer'] = element[0];
         }
-        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map, toolbarOptions);
+
+        function setOptions() {
+            if(scope.strokeColor) {
+                if(!options.hasOwnProperty('shapeOptions')) {
+                    options.shapeOptions = {};
+                }
+                options.shapeOptions.strokeColor = MapUtils.makeMicrosoftColor(scope.strokeColor);
+            }
+            if(scope.fillColor) {
+                if(!options.hasOwnProperty('shapeOptions')) {
+                    options.shapeOptions = {};
+                }
+                options.shapeOptions.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
+            }
+            scope.drawingManager.setOptions(options);
+        }
+        
+        scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map);
+        setOptions();
         
         scope.$watch('drawThisShape', function (shape) {
             if (shape === 'none') {
@@ -28,6 +47,10 @@ function drawingToolsDirective() {
                 scope.drawingManager.setDrawingMode(shape);
             }
         });
+        
+        scope.$on('DRAWINGTOOLS.CLEAR', function() {
+            scope.drawingManager.clear();
+        });
     }
 
     return {
@@ -35,7 +58,9 @@ function drawingToolsDirective() {
         restrict: 'EA',
         scope: {
             onShapeChange: '&',
-            drawThisShape: '='
+            drawThisShape: '=',
+            strokeColor: '=?',
+            fillColor: '=?'
         },
         require: '^bingMap'
     };
