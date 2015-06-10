@@ -241,7 +241,8 @@ function bingMapDirective() {
             center: '=?',
             zoom: '=?',
             mapType: '=?',
-            events: '=?'
+            events: '=?',
+            options: '=?'
         },
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
@@ -261,6 +262,10 @@ function bingMapDirective() {
 
             $scope.$watch('mapType', function (mapTypeId) {
                 $scope.map.setView({animate: true, mapTypeId: mapTypeId});
+            });
+
+            $scope.$watch('options', function(options) {
+                $scope.map.setOptions(options);
             });
             
             $scope.$watch('events', function (events) {
@@ -1441,6 +1446,13 @@ function hsl2hsv(hsl) {
       s = hsl[1] / 100,
       l = hsl[2] / 100,
       sv, v;
+
+  if(l === 0) {
+      // no need to do calc on black
+      // also avoids divide by 0 error
+      return [0, 0, 0];
+  }
+
   l *= 2;
   s *= (l <= 1) ? l : 2 - l;
   v = (l + s) / 2;

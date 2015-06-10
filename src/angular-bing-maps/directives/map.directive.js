@@ -12,7 +12,8 @@ function bingMapDirective() {
             center: '=?',
             zoom: '=?',
             mapType: '=?',
-            events: '=?'
+            events: '=?',
+            options: '=?'
         },
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
@@ -32,6 +33,10 @@ function bingMapDirective() {
 
             $scope.$watch('mapType', function (mapTypeId) {
                 $scope.map.setView({animate: true, mapTypeId: mapTypeId});
+            });
+
+            $scope.$watch('options', function(options) {
+                $scope.map.setOptions(options);
             });
             
             $scope.$watch('events', function (events) {
