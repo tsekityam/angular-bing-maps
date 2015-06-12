@@ -19,21 +19,21 @@ This is a project that Credera is developing as part of a client engagement. All
     * NOTE: Please register for your own Bing Maps API key at https://www.bingmapsportal.com. Login with your Windows Live account and click 'My Account' -> 'Create or view your keys'
 
 ##Documentation
-Proper documentation is in our road map, but currently not implemented. Please view [/examples](https://github.com/Credera/angular-bing-maps/blob/master/example) for example usage of each directive.
+Proper documentation is in our road map, but currently not implemented. Please view [/examples](example) for example usage of each directive.
 
 ### List of available directives
-  * `<bing-map>`
-  * `<pushpin>`
-  * `<infobox>`
-  * `<polygon>`
-  * `<polyline>`
-  * `<tile-layer>`
+  * [`<bing-map>`](example/bing-map-directive.html)
+  * [`<pushpin>`](example/pushpin-directive.html)
+  * [`<infobox>`](example/infobox-directive.html)
+  * [`<polygon>`](example/polygon-directive.html)
+  * [`<polyline>`](example/polyline-directive.html)
+  * [`<tile-layer>`](example/tile-layer-directive.html)
   * [`<venue-map>`](example/bing-venue-map-directive.html)
-  * `<geo-json>` :star:
+  * [`<geo-json>`](example/geo-json-directive.html) :star:
     * Using Earthware Ltd.'s Bing Maps GeoJSON Module from http://bingmapsv7modules.codeplex.com/wikipage?title=GeoJSON%20Module
-  * `<wkt>` :star:[(Well-Known Text)](http://en.wikipedia.org/wiki/Well-known_text)
+  * [`<wkt>`](wkt-directive.html) :star:[(Well-Known Text)](http://en.wikipedia.org/wiki/Well-known_text)
     * Using Ricky Brundritt's Bing Maps WKT Read/Write Module http://bingmapsv7modules.codeplex.com/wikipage?title=Well%20Known%20Text%20Reader%2fWriter
-  * `<drawing-tools>`:star:
+  * [`<drawing-tools>`](drawing-tools-directive.html):star:
     * Using Ricky Brundritt's Bing Maps Drawing Tools Module https://bingmapsv7modules.codeplex.com/wikipage?title=Drawing%20Tools%20Module&version=1
 
 :star: - Third party modules must be manually included in addition to angular-bing-maps.js. Please use modules found inside this repository under /BingMapModules/{{moduleName}}
