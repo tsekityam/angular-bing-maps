@@ -37,3 +37,16 @@ Proper documentation is in our road map, but currently not implemented. Please v
     * Using Ricky Brundritt's Bing Maps Drawing Tools Module https://bingmapsv7modules.codeplex.com/wikipage?title=Drawing%20Tools%20Module&version=1
 
 :star: - Third party modules must be manually included in addition to angular-bing-maps.js. Please use modules found inside this repository under /BingMapModules/{{moduleName}}
+
+##Contributing
+Feel free to submit PR's for features, but please submit all PR's as candidates for the "develop" branch. Our "master" branch contains the latest stable release.
+###Developer Setup
+To begin contributing to angular-bing-maps:
+ 1. Fork it
+ 2. Clone your fork
+ 3. Checkout the "develop" branch
+   * `git checkout devlop`
+ 4. Create a new feature branch for your changes off the develop branch
+   * `git branch my-super-cool-feature`
+ 5. Make your changes and commit them to your feature branch
+ 6. Submit a PR as a candidate for the "develop" branch of the central repository. Please do not submit PR's as candidates for "master". They will be declined.
