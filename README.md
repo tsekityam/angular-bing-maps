@@ -28,6 +28,7 @@ Proper documentation is in our road map, but currently not implemented. Please v
   * `<polygon>`
   * `<polyline>`
   * `<tile-layer>`
+  * `<venue-map>`: [Example](example/bing-venue-map-directive.html?raw=true)
   * `<geo-json>` :star:
     * Using Earthware Ltd.'s Bing Maps GeoJSON Module from http://bingmapsv7modules.codeplex.com/wikipage?title=GeoJSON%20Module
   * `<wkt>` :star:[(Well-Known Text)](http://en.wikipedia.org/wiki/Well-known_text)
