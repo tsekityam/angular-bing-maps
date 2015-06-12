@@ -48,5 +48,13 @@ To begin contributing to angular-bing-maps:
    * `git checkout devlop`
  4. Create a new feature branch for your changes off the develop branch
    * `git branch my-super-cool-feature`
+ 5. Install NodeJS developer dependencies
+   * `npm install`
+ 6. Install bower developer dependencies
+   * `bower install`
+ 7. Run the gulp build process to automatically lint and compile the library as you make changes
+   * `gulp`
+ 8. For any signifcant feature additions, please update the documentation / examples to illustrate your new feature to potential users
  5. Make your changes and commit them to your feature branch
+   * Note: You will have pending changes to the dist/ directory where the compiled assets are located. Feel free to check these in if you like. I will do my best to ensure the "develop" branch always contains the latest build before pushing to the central repository
  6. Submit a PR as a candidate for the "develop" branch of the central repository. Please do not submit PR's as candidates for "master". They will be declined.
