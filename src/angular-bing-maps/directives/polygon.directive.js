@@ -48,7 +48,7 @@ function polygonDirective(MapUtils) {
                 }
                 var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
                     //As a convenience, add tracker id to target attribute for user to ID target of event
-                    if(scope.trackBy) {
+                    if(typeof scope.trackBy !== 'undefined') {
                         event.target['trackBy'] = scope.trackBy;
                     }
                     usersHandler(event);

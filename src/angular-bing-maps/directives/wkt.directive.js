@@ -75,7 +75,7 @@ function wktDirective(MapUtils) {
         
         function addHandler(target, eventName, userHandler) {
             var handler = Microsoft.Maps.Events.addHandler(target, eventName, function(event) {
-                if(scope.trackBy) {
+                if(typeof scope.trackBy !== 'undefined') {
                     event.target['trackBy'] = scope.trackBy;
                 }
                 userHandler(event);

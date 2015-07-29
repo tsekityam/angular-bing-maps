@@ -339,7 +339,7 @@ function polygonDirective(MapUtils) {
                 }
                 var bingMapsHandler = Microsoft.Maps.Events.addHandler(polygon, eventName, function(event) {
                     //As a convenience, add tracker id to target attribute for user to ID target of event
-                    if(scope.trackBy) {
+                    if(typeof scope.trackBy !== 'undefined') {
                         event.target['trackBy'] = scope.trackBy;
                     }
                     usersHandler(event);
@@ -452,7 +452,7 @@ function pushpinDirective() {
                 }
                 var bingMapsHandler = Microsoft.Maps.Events.addHandler(scope.pin, eventName, function(event) {
                     //As a convenience, add tracker id to target attribute for user to ID target of event
-                    if(scope.trackBy) {
+                    if(typeof scope.trackBy !== 'undefined') {
                         event.target['trackBy'] = scope.trackBy;
                     }
                     usersHandler(event);
@@ -749,7 +749,7 @@ function wktDirective(MapUtils) {
         
         function addHandler(target, eventName, userHandler) {
             var handler = Microsoft.Maps.Events.addHandler(target, eventName, function(event) {
-                if(scope.trackBy) {
+                if(typeof scope.trackBy !== 'undefined') {
                     event.target['trackBy'] = scope.trackBy;
                 }
                 userHandler(event);
