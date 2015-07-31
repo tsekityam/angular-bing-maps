@@ -154,7 +154,8 @@ function infoBoxDirective() {
     'use strict';
 
     function link(scope, element, attrs, ctrls) {
-        var infobox = new Microsoft.Maps.Infobox(),
+        //Need to initialize this with a Location to prevent errors adding it to the map
+        var infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(0,0)),
             pushpinCtrl = ctrls[1];
 
         function updateLocation() {
