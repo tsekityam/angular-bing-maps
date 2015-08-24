@@ -8,7 +8,7 @@ function pushpinDirective() {
         var eventHandlers = {};
 
         function updatePosition() {
-            if (scope.lat && scope.lng) {
+            if (!isNaN(scope.lat) && !isNaN(scope.lng)) {
                 scope.pin.setLocation(new Microsoft.Maps.Location(scope.lat, scope.lng));
                 scope.$broadcast('positionUpdated', scope.pin.getLocation());
             }
