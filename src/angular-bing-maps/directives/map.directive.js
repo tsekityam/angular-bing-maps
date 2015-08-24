@@ -17,7 +17,9 @@ function bingMapDirective() {
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
-            this.map = new Microsoft.Maps.Map($element[0], {credentials: $scope.credentials});
+            $scope.options = $scope.options || {};
+            $scope.options.credentials = $scope.credentials;
+            this.map = new Microsoft.Maps.Map($element[0], $scope.options );
             
             var eventHandlers = {};
             $scope.map = this.map;
