@@ -15,12 +15,14 @@
   angular.module('angularBingMaps.directives', []);
   angular.module('angularBingMaps.filters', []);
   angular.module('angularBingMaps.services', []);
+  angular.module('angularBingMaps.providers', []);
   angular.module('angularBingMaps',
       [
           'angularBingMaps.config',
           'angularBingMaps.directives',
           'angularBingMaps.filters',
-          'angularBingMaps.services'
+          'angularBingMaps.services',
+          'angularBingMaps.providers'
       ]);
 
 })();
@@ -233,7 +235,7 @@ angular.module('angularBingMaps.directives').directive('infoBox', infoBoxDirecti
 
 /*global angular, Microsoft*/
 
-function bingMapDirective() {
+function bingMapDirective(angularBingMaps) {
     'use strict';
 
     return {
@@ -251,7 +253,22 @@ function bingMapDirective() {
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
-            this.map = new Microsoft.Maps.Map($element[0], {credentials: $scope.credentials});
+            
+            // Get default mapOptions the user set in config block
+            var mapOptions = angularBingMaps.getDefaultMapOptions();
+            // Add in any options they passed directly into the directive
+            angular.extend(mapOptions, $scope.options);
+            if(mapOptions) {
+                //If the user didnt set credentials in config block, look for them on scope
+                if(!mapOptions.hasOwnProperty('credentials')) {
+                    mapOptions.credentials = $scope.credentials;
+                }
+            } else {
+                //The user didnt set any mapOptions on the scope OR in the config block, so create a default one
+                mapOptions = {credentials: $scope.credentials};
+            }
+
+            this.map = new Microsoft.Maps.Map($element[0], mapOptions);
             
             var eventHandlers = {};
             $scope.map = this.map;
@@ -434,7 +451,7 @@ function pushpinDirective() {
         var eventHandlers = {};
 
         function updatePosition() {
-            if (scope.lat && scope.lng) {
+            if (!isNaN(scope.lat) && !isNaN(scope.lng)) {
                 scope.pin.setLocation(new Microsoft.Maps.Location(scope.lat, scope.lng));
                 scope.$broadcast('positionUpdated', scope.pin.getLocation());
             }
@@ -793,6 +810,33 @@ function wktDirective(MapUtils) {
 }
 
 angular.module('angularBingMaps.directives').directive('wkt', wktDirective);
+
+/*global angular, Microsoft */
+
+function angularBingMapsProvider() {
+    'use strict';
+    var defaultMapOptions = {};
+    
+    function setDefaultMapOptions(usersOptions) {
+        defaultMapOptions = usersOptions;
+    }
+    
+    function getDefaultMapOptions() {
+        return defaultMapOptions;
+    }
+
+    return {
+        setDefaultMapOptions: setDefaultMapOptions,
+        $get: function() {
+            return {
+                getDefaultMapOptions: getDefaultMapOptions
+            };
+        }
+    };
+
+}
+
+angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
 
 /*global angular, Microsoft, DrawingTools, console*/
 

@@ -14,12 +14,14 @@
   angular.module('angularBingMaps.directives', []);
   angular.module('angularBingMaps.filters', []);
   angular.module('angularBingMaps.services', []);
+  angular.module('angularBingMaps.providers', []);
   angular.module('angularBingMaps',
       [
           'angularBingMaps.config',
           'angularBingMaps.directives',
           'angularBingMaps.filters',
-          'angularBingMaps.services'
+          'angularBingMaps.services',
+          'angularBingMaps.providers'
       ]);
 
 })();

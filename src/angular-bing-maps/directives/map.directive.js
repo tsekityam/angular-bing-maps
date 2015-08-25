@@ -1,6 +1,6 @@
 /*global angular, Microsoft*/
 
-function bingMapDirective() {
+function bingMapDirective(angularBingMaps) {
     'use strict';
 
     return {
@@ -18,9 +18,22 @@ function bingMapDirective() {
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
-            $scope.options = $scope.options || {};
-            $scope.options.credentials = $scope.credentials;
-            this.map = new Microsoft.Maps.Map($element[0], $scope.options );
+            
+            // Get default mapOptions the user set in config block
+            var mapOptions = angularBingMaps.getDefaultMapOptions();
+            // Add in any options they passed directly into the directive
+            angular.extend(mapOptions, $scope.options);
+            if(mapOptions) {
+                //If the user didnt set credentials in config block, look for them on scope
+                if(!mapOptions.hasOwnProperty('credentials')) {
+                    mapOptions.credentials = $scope.credentials;
+                }
+            } else {
+                //The user didnt set any mapOptions on the scope OR in the config block, so create a default one
+                mapOptions = {credentials: $scope.credentials};
+            }
+
+            this.map = new Microsoft.Maps.Map($element[0], mapOptions);
             
             var eventHandlers = {};
             $scope.map = this.map;
