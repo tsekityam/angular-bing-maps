@@ -16,7 +16,7 @@
                 });
             });
             
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', function($scope, $http, $timeout) {
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
                 $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
@@ -26,7 +26,10 @@
                     disablePanning: true,
                     disableZooming: true
                 };
-
+                $scope.onMapReady = function(map) {
+                    //This will return (0,0) because we havn't set the center yet
+                    console.log('Map loaded with center:' + map.getCenter());
+                }
             });
         </script>
 
@@ -45,7 +48,8 @@
                 center="mapOptions.center"
                 zoom="mapOptions.zoom"
                 map-type="mapOptions.mapType"
-                options="mapOptions.options">
+                options="mapOptions.options"
+                on-map-ready="onMapReady(map)">
             </bing-map>
 
         </div>

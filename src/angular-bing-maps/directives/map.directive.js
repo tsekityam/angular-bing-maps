@@ -13,7 +13,8 @@ function bingMapDirective(angularBingMaps) {
             zoom: '=?',
             mapType: '=?',
             events: '=?',
-            options: '=?'
+            options: '=?',
+            onMapReady: '&?'
         },
         controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
@@ -68,6 +69,11 @@ function bingMapDirective(angularBingMaps) {
                     eventHandlers[eventName] = bingMapsHandler;
                 });
             });
+        },
+        link: function ($scope, $element) {
+            if ($scope.onMapReady) {
+                $scope.onMapReady({ map: $scope.map });
+            }
         }
     };
 
