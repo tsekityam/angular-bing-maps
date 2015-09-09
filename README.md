@@ -2,7 +2,7 @@
 [![Join the chat at https://gitter.im/Credera/angular-bing-maps](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Credera/angular-bing-maps?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ##Project Status
-This is a project that Credera is developing as part of a client engagement. All requirements / features of Angular Bing Maps are driven by that client's needs. Once our client's needs have been met, we will be focusing on any additional features requested by the community. In the meantime, please feel free to submit an issue and/or PR with any features that might be missing.
+Angular Bing Maps is a project that Credera developed as part of a client engagement. All requirements / features were initially driven by client needs, but we are now accepting features from the community. Feel free to submit issues and feature requests. See "Contributing" section below for instructions on how to make changes and submit PRs.
 
 ##Getting Started
   1. Obtain source code for angular-bing-maps
