@@ -817,33 +817,6 @@ function wktDirective(MapUtils) {
 
 angular.module('angularBingMaps.directives').directive('wkt', wktDirective);
 
-/*global angular, Microsoft */
-
-function angularBingMapsProvider() {
-    'use strict';
-    var defaultMapOptions = {};
-    
-    function setDefaultMapOptions(usersOptions) {
-        defaultMapOptions = usersOptions;
-    }
-    
-    function getDefaultMapOptions() {
-        return defaultMapOptions;
-    }
-
-    return {
-        setDefaultMapOptions: setDefaultMapOptions,
-        $get: function() {
-            return {
-                getDefaultMapOptions: getDefaultMapOptions
-            };
-        }
-    };
-
-}
-
-angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
-
 /*global angular, Microsoft, DrawingTools, console*/
 
 function mapUtilsService($q) {
@@ -933,6 +906,33 @@ function mapUtilsService($q) {
 }
 
 angular.module('angularBingMaps.services').service('MapUtils', mapUtilsService);
+
+/*global angular, Microsoft */
+
+function angularBingMapsProvider() {
+    'use strict';
+    var defaultMapOptions = {};
+
+    function setDefaultMapOptions(usersOptions) {
+        defaultMapOptions = usersOptions;
+    }
+
+    function getDefaultMapOptions() {
+        return defaultMapOptions;
+    }
+
+    return {
+        setDefaultMapOptions: setDefaultMapOptions,
+        $get: function() {
+            return {
+                getDefaultMapOptions: getDefaultMapOptions
+            };
+        }
+    };
+
+}
+
+angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
 
 },{"color":2}],2:[function(require,module,exports){
 /* MIT license */
