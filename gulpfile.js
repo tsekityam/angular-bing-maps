@@ -45,7 +45,7 @@ gulp.task('build', function() {
     //.pipe(buffer())
     .pipe(browserified)
     .pipe(gulp.dest('./dist'))
-    .pipe(uglify())
+    .pipe(uglify({mangle: false}))
     .pipe(rename('angular-bing-maps.min.js'))
     .pipe(gulp.dest('./dist'))
 });
