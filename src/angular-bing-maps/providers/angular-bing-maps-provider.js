@@ -1,5 +1,6 @@
 /*global angular, Microsoft */
 
+angularBingMapsProvider.$inject = [];
 function angularBingMapsProvider() {
     'use strict';
     var defaultMapOptions = {};

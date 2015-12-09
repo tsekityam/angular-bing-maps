@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
+drawingToolsDirective.$inject = ['MapUtils'];
 function drawingToolsDirective(MapUtils) {
     'use strict';
 

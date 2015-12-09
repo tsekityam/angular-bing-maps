@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
+pushpinDirective.$inject = [];
 function pushpinDirective() {
     'use strict';
 
@@ -65,10 +66,10 @@ function pushpinDirective() {
 
     return {
         link: link,
-        controller: function ($scope) {
+        controller: ['$scope', function ($scope) {
             this.pin = new Microsoft.Maps.Pushpin();
             $scope.pin = this.pin;
-        },
+        }],
         template: '<div ng-transclude></div>',
         restrict: 'EA',
         transclude: true,

@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
+angularBingMapsProvider.$inject = ['$q'];
 function mapUtilsService($q) {
     'use strict';
     var color = require('color');

@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console, WKTModule*/
 
+wktDirective.$inject = ['MapUtils'];
 function wktDirective(MapUtils) {
     'use strict';
 
