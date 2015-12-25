@@ -21,9 +21,13 @@
                 $scope.pushpin.options = {
                     draggable: true
                 }
+                $scope.pushpin.data= {
+                    text: 'Hello World!'
+                };
                 $scope.pushpin.events = {
-                    click: function() {
-                        alert('The click event is working fine!')
+                    click: function(eventData) {
+                        var data = eventData.target.pushpinData;
+                        alert('The click event is working fine! Here is the data: ' + data.text)
                     }
                 };
 
@@ -51,7 +55,8 @@
                     lat="pushpin.location.latitude"
                     lng="pushpin.location.longitude"
                     options="pushpin.options"
-                    events="pushpin.events">
+                    events="pushpin.events",
+                    pushpin-data="pushpin.data">
                 </pushpin>
 
             </bing-map>
