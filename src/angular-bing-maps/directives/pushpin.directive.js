@@ -22,7 +22,7 @@ function pushpinDirective() {
             scope.pin.setOptions(newOptions);
         });
         scope.$watch('pushpinData', function (newPushpinData) {
-                scope.pin.pushpinData = newPushpinData;
+            scope.pin.pushpinData = newPushpinData;
         });
         scope.$watch('events', function(events) {
             //Loop through each event handler

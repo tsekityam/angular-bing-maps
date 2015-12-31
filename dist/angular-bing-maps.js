@@ -27,33 +27,6 @@
 
 })();
 
-/*global angular, Microsoft */
-
-function angularBingMapsProvider() {
-    'use strict';
-    var defaultMapOptions = {};
-    
-    function setDefaultMapOptions(usersOptions) {
-        defaultMapOptions = usersOptions;
-    }
-    
-    function getDefaultMapOptions() {
-        return defaultMapOptions;
-    }
-
-    return {
-        setDefaultMapOptions: setDefaultMapOptions,
-        $get: function() {
-            return {
-                getDefaultMapOptions: getDefaultMapOptions
-            };
-        }
-    };
-
-}
-
-angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
-
 /*global angular, Microsoft, DrawingTools, console*/
 
 function drawingToolsDirective(MapUtils) {
@@ -498,7 +471,7 @@ function pushpinDirective() {
             scope.pin.setOptions(newOptions);
         });
         scope.$watch('pushpinData', function (newPushpinData) {
-                scope.pin.pushpinData = newPushpinData;
+            scope.pin.pushpinData = newPushpinData;
         });
         scope.$watch('events', function(events) {
             //Loop through each event handler
@@ -847,6 +820,33 @@ function wktDirective(MapUtils) {
 }
 
 angular.module('angularBingMaps.directives').directive('wkt', wktDirective);
+
+/*global angular, Microsoft */
+
+function angularBingMapsProvider() {
+    'use strict';
+    var defaultMapOptions = {};
+    
+    function setDefaultMapOptions(usersOptions) {
+        defaultMapOptions = usersOptions;
+    }
+    
+    function getDefaultMapOptions() {
+        return defaultMapOptions;
+    }
+
+    return {
+        setDefaultMapOptions: setDefaultMapOptions,
+        $get: function() {
+            return {
+                getDefaultMapOptions: getDefaultMapOptions
+            };
+        }
+    };
+
+}
+
+angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
 
 /*global angular, Microsoft, DrawingTools, console*/
 
