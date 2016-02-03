@@ -18,14 +18,15 @@
             
             app.controller('ExampleController', function($scope, $http, $timeout) {
                 /*<bing-map> directive options*/
-                $scope.mapOptions = {};
-                $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
-                $scope.mapOptions.zoom = 6;
-                $scope.mapOptions.mapType = 'a';
-                $scope.mapOptions.options = {
-                    disablePanning: true,
-                    disableZooming: true
-                };
+            	$scope.mapOptions = {
+            		center: { latitude: 30.614919, longitude: -96.342316},
+            		zoom: 6,
+            		mapType: 'a',
+            		options: {
+            			disablePanning: true,
+            			disableZooming:true
+            		}
+            	};
                 $scope.onMapReady = function(map) {
                     //This will return (0,0) because we havn't set the center yet
                     console.log('Map loaded with center:' + map.getCenter());
