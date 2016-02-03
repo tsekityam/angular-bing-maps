@@ -4,7 +4,7 @@ function pushpinDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
-        
+
         var eventHandlers = {};
 
         function updatePosition() {
@@ -20,6 +20,9 @@ function pushpinDirective() {
         scope.$watch('lng', updatePosition);
         scope.$watch('options', function (newOptions) {
             scope.pin.setOptions(newOptions);
+        });
+        scope.$watch('pushpinData', function (newPushpinData) {
+            scope.pin.pushpinData = newPushpinData;
         });
         scope.$watch('events', function(events) {
             //Loop through each event handler
@@ -77,7 +80,8 @@ function pushpinDirective() {
             lat: '=',
             lng: '=',
             events: '=?',
-            trackBy: '=?'
+            trackBy: '=?',
+            pushpinData: '=?'
         },
         require: '^bingMap'
     };
