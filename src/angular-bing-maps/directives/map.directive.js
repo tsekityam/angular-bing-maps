@@ -39,6 +39,22 @@ function bingMapDirective(angularBingMaps) {
             
             var eventHandlers = {};
             $scope.map = this.map;
+            
+            /* 
+                Since Bing Maps fires view change events as soon as the map loads, we have to wait until after the
+                initial viewchange event has completed before we bind to $scope.center. Otherwise the user's
+                $scope.center will always be set to {0, 0} when the map loads
+            */
+            var initialViewChangeHandler = Microsoft.Maps.Events.addHandler($scope.map, 'viewchangeend', function() {
+                Microsoft.Maps.Events.removeHandler(initialViewChangeHandler);
+                //Once initial view change has ended, bind the user's specified handler to view change
+                var centerBindEvent = angularBingMaps.getCenterBindEvent();
+                Microsoft.Maps.Events.addHandler($scope.map, centerBindEvent, function(event) {
+                    $scope.center = $scope.map.getCenter();
+                    $scope.$apply();
+                });
+            });
+            
 
             $scope.$watch('center', function (center) {
                 $scope.map.setView({animate: true, center: center});

@@ -14,6 +14,7 @@
                     credentials: 'AkaxzD5YOJCbIvziHVOLfm6AkeM5Z5UQ3dHS53mQzwK-6LGWnxYjAwNqfe3D4UBT',
                     enableClickableLogo: false
                 });
+                angularBingMapsProvider.bindCenterRealtime(false);
             }]);
             
             app.controller('ExampleController', 
@@ -24,8 +25,8 @@
             		zoom: 6,
             		mapType: 'a',
             		options: {
-            			disablePanning: true,
-            			disableZooming:true
+            			//disablePanning: true,
+            			//disableZooming:true
             		}
             	};
                 $scope.onMapReady = function(map) {
@@ -44,8 +45,8 @@
 
     </head>
     <body ng-app="angularBingMapExample" ng-strict-di>
-
         <div class="bing-map-container" ng-controller="ExampleController">
+            <h1>{{mapOptions.center}}</h1>
             <bing-map
                 center="mapOptions.center"
                 zoom="mapOptions.zoom"
