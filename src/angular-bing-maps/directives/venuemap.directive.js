@@ -16,7 +16,7 @@ function venueMapDirective($timeout) {
             venue: '=?',
             room: '=?',
         },
-        controller: function ($scope, $element) {
+        controller: ['$scope', '$element', function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
             this.map = new Microsoft.Maps.Map($element.children()[1], { credentials: $scope.credentials });
@@ -102,7 +102,7 @@ function venueMapDirective($timeout) {
             }
 
             Microsoft.Maps.loadModule('Microsoft.Maps.VenueMaps', { callback: venueMapModuleReady });
-        }
+        }]
     };
 }
 

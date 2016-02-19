@@ -1,5 +1,6 @@
 /*global angular, Microsoft, GeoJSONModule, console*/
 
+geoJsonDirective.$inject = [];
 function geoJsonDirective() {
     'use strict';
 

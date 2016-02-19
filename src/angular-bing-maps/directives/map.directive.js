@@ -1,5 +1,6 @@
 /*global angular, Microsoft*/
 
+bingMapDirective.$inject = ['angularBingMaps'];
 function bingMapDirective(angularBingMaps) {
     'use strict';
 
@@ -16,7 +17,7 @@ function bingMapDirective(angularBingMaps) {
             options: '=?',
             onMapReady: '&?'
         },
-        controller: function ($scope, $element) {
+        controller: ['$scope', '$element', function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
             
@@ -69,7 +70,7 @@ function bingMapDirective(angularBingMaps) {
                     eventHandlers[eventName] = bingMapsHandler;
                 });
             });
-        },
+        }],
         link: function ($scope, $element) {
             if ($scope.onMapReady) {
                 $scope.onMapReady({ map: $scope.map });

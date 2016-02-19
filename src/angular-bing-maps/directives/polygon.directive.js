@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
+polygonDirective.$inject = ['MapUtils'];
 function polygonDirective(MapUtils) {
     'use strict';
 

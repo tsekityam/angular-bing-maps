@@ -1,5 +1,6 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
+infoBoxDirective.$inject = [];
 function infoBoxDirective() {
     'use strict';
 
