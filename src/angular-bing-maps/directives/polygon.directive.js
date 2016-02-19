@@ -76,4 +76,4 @@ function polygonDirective(MapUtils) {
 
 }
 
-angular.module('angularBingMaps.directives').directive('polygon', polygonDirective);
+angular.module('angularBingMaps.directives').directive('abmPolygon', polygonDirective);

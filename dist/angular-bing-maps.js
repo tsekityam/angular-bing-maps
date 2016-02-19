@@ -398,7 +398,7 @@ function polygonDirective(MapUtils) {
 
 }
 
-angular.module('angularBingMaps.directives').directive('polygon', polygonDirective);
+angular.module('angularBingMaps.directives').directive('abmPolygon', polygonDirective);
 
 /*global angular, Microsoft, DrawingTools, console*/
 
