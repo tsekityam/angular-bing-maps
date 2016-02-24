@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-infoBoxDirective.$inject = [];
 function infoBoxDirective() {
     'use strict';
 
@@ -58,7 +57,7 @@ function infoBoxDirective() {
 
         scope.$on('$destroy', unregisterEventListeners);
         element.on('$destroy', unregisterEventListeners);
-        
+
         function unregisterEventListeners() {
             ctrls[0].map.entities.remove(infobox);
         }

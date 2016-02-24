@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-tileLayerDirective.$inject = [];
 function tileLayerDirective() {
     'use strict';
 

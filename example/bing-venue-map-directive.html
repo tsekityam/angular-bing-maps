@@ -6,18 +6,18 @@
 
         <script src="../dist/angular-bing-maps.js"></script>
         <!--
-        
+
         Author: Gavin Barron (Intergen Ltd)
         Websites: http://gavinb.net & http://teamintergen.com
         Date: June 6th, 2015
         Description: This directive allows users to easily leverage the Bing Venue Maps in their AngularJS applications.
-                    This directive also allows for the ability to select a specific room/item in the veune this could 
+                    This directive also allows for the ability to select a specific room/item in the veune this could
                     be passed as a route paramter and set on the directive by controller.
         -->
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<venue-map> directive options*/
                 $scope.mapOptions = {};
@@ -28,9 +28,9 @@
                 $scope.mapOptions.credentials = 'AkaxzD5YOJCbIvziHVOLfm6AkeM5Z5UQ3dHS53mQzwK-6LGWnxYjAwNqfe3D4UBT';
                 // Typically you should inject $routeParams into the controller and read the room name from a route parameter;
                 // Just leave unset if you don't want a room selected
-                $scope.mapOptions.room = 'Exhibition Hall A1' 
+                $scope.mapOptions.room = 'Exhibition Hall A1'
 
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -54,7 +54,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <venue-map center="mapOptions.center"

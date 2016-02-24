@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console, WKTModule*/
 
-wktDirective.$inject = ['MapUtils'];
 function wktDirective(MapUtils) {
     'use strict';
 
@@ -9,12 +8,12 @@ function wktDirective(MapUtils) {
             console.log('You did not include WKTModule.js. Please include this script and try again');
             return;
         }
-        
+
         var entity = null;
         var eventHandlers = [];
-        
+
         MapUtils.loadAdvancedShapesModule().then(function() {
-            
+
             scope.$watch('text', function (shape) {
                 if(entity) {
                     //Something is already on the map, remove that
@@ -25,13 +24,13 @@ function wktDirective(MapUtils) {
                     entity = WKTModule.Read(shape, scope.styles);
                     // It's unclear to me if we need to call MapUtils.flattenEntityCollection()
                     // to ensure all subsequent loops through
-                    // entitycollections do not have nested entitycollections. 
+                    // entitycollections do not have nested entitycollections.
                     // It works as-is with test data, so not flattening
                     setOptions();
                     mapCtrl.map.entities.push(entity);
                 }
             }, true);
-            
+
             scope.$watch('events', function(events) {
                 removeAllHandlers();
                 //Loop through each event handler
@@ -46,16 +45,16 @@ function wktDirective(MapUtils) {
                     }
                 });
             });
-            
+
             scope.$watch('fillColor', setOptions, true);
-            
+
             scope.$watch('strokeColor', setOptions, true);
         });
-        
+
         function setOptions() {
             //Entity not parsed yet
             if(!entity) {return;}
-            
+
             var options = {};
             if(scope.fillColor) {
                 options.fillColor = MapUtils.makeMicrosoftColor(scope.fillColor);
@@ -73,7 +72,7 @@ function wktDirective(MapUtils) {
                 entity.setOptions(options);
             }
         }
-        
+
         function addHandler(target, eventName, userHandler) {
             var handler = Microsoft.Maps.Events.addHandler(target, eventName, function(event) {
                 if(typeof scope.trackBy !== 'undefined') {
@@ -84,7 +83,7 @@ function wktDirective(MapUtils) {
             });
             eventHandlers.push(handler);
         }
-            
+
         function removeAllHandlers() {
             var handler = eventHandlers.pop();
             while(typeof handler === 'function') {
@@ -93,7 +92,7 @@ function wktDirective(MapUtils) {
             }
         }
 
-        
+
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(entity);
         });

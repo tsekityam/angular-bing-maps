@@ -1,6 +1,5 @@
 /*global angular, Microsoft*/
 
-bingMapDirective.$inject = ['angularBingMaps'];
 function bingMapDirective(angularBingMaps) {
     'use strict';
 
@@ -17,10 +16,10 @@ function bingMapDirective(angularBingMaps) {
             options: '=?',
             onMapReady: '&?'
         },
-        controller: ['$scope', '$element', function ($scope, $element) {
+        controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
-            
+
             // Get default mapOptions the user set in config block
             var mapOptions = angularBingMaps.getDefaultMapOptions();
             // Add in any options they passed directly into the directive
@@ -36,11 +35,11 @@ function bingMapDirective(angularBingMaps) {
             }
 
             this.map = new Microsoft.Maps.Map($element[0], mapOptions);
-            
+
             var eventHandlers = {};
             $scope.map = this.map;
-            
-            /* 
+
+            /*
                 Since Bing Maps fires view change events as soon as the map loads, we have to wait until after the
                 initial viewchange event has completed before we bind to $scope.center. Otherwise the user's
                 $scope.center will always be set to {0, 0} when the map loads
@@ -54,7 +53,7 @@ function bingMapDirective(angularBingMaps) {
                     $scope.$apply();
                 });
             });
-            
+
 
             $scope.$watch('center', function (center) {
                 $scope.map.setView({animate: true, center: center});
@@ -71,7 +70,7 @@ function bingMapDirective(angularBingMaps) {
             $scope.$watch('options', function(options) {
                 $scope.map.setOptions(options);
             });
-            
+
             $scope.$watch('events', function (events) {
                 //Loop through each event handler
                 angular.forEach(events, function (usersHandler, eventName) {
@@ -86,7 +85,7 @@ function bingMapDirective(angularBingMaps) {
                     eventHandlers[eventName] = bingMapsHandler;
                 });
             });
-        }],
+        },
         link: function ($scope, $element) {
             if ($scope.onMapReady) {
                 $scope.onMapReady({ map: $scope.map });

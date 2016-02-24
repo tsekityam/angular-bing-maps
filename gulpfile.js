@@ -12,6 +12,7 @@ var notify = require('gulp-notify');
 var browserify = require('browserify');
 var transform = require('vinyl-transform');
 var buffer = require('vinyl-buffer');
+var ngAnnotate = require('gulp-ng-annotate');
 
 /**
  * File patterns
@@ -41,11 +42,12 @@ gulp.task('build', function() {
   gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(concat('angular-bing-maps.js'))
+    .pipe(ngAnnotate({single_quotes: true}))
     .pipe(gulp.dest('./dist'))
     //.pipe(buffer())
     .pipe(browserified)
     .pipe(gulp.dest('./dist'))
-    .pipe(uglify({mangle: false}))
+    .pipe(uglify())
     .pipe(rename('angular-bing-maps.min.js'))
     .pipe(gulp.dest('./dist'))
 });
