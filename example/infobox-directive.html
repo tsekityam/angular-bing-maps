@@ -8,7 +8,7 @@
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
@@ -36,7 +36,7 @@
                 };
                 $scope.infobox.title = 'Gig\' Em!';
                 $scope.infobox.visible = true;
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -47,7 +47,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map

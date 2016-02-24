@@ -8,14 +8,14 @@
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
                 $scope.mapOptions.center = {latitude: 30.614919,longitude: -96.342316};
                 $scope.mapOptions.zoom = 6;
                 $scope.mapOptions.mapType = 'a';
-                
+
                 $scope.wkt = {};
                 $scope.wkt.shapes = [];
                 $scope.wkt.shapes.push({
@@ -58,13 +58,13 @@
                         width: 100
                     },
                     polylineOptions: {
-                        
+
                     },
                     polygoneOptions: {
-                        
+
                     }
                 }
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -75,7 +75,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map
@@ -84,10 +84,10 @@
                 zoom="mapOptions.zoom"
                 mapType="mapOptions.mapType">
 
-                <wkt 
-                     ng-repeat="shape in wkt.shapes" 
-                     text="shape.geom" 
-                     events="wkt.eventHandlers" 
+                <wkt
+                     ng-repeat="shape in wkt.shapes"
+                     text="shape.geom"
+                     events="wkt.eventHandlers"
                      track-by="shape.id"
                      fill-color="shape.fillColor"
                      stroke-color="shape.strokeColor"

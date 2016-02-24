@@ -1,19 +1,19 @@
 /*global angular, Microsoft */
 
-angularBingMapsProvider.$inject = [];
 function angularBingMapsProvider() {
     'use strict';
+
     var defaultMapOptions = {};
     var centerBindEvent = 'viewchangeend';
-    
+
     function setDefaultMapOptions(usersOptions) {
         defaultMapOptions = usersOptions;
     }
-    
+
     function getDefaultMapOptions() {
         return defaultMapOptions;
     }
-    
+
     function bindCenterRealtime(_bindCenterRealtime) {
         if(_bindCenterRealtime) {
             centerBindEvent = 'viewchange';
@@ -21,7 +21,7 @@ function angularBingMapsProvider() {
             centerBindEvent = 'viewchangeend';
         }
     }
-    
+
     function getCenterBindEvent() {
         return centerBindEvent;
     }
