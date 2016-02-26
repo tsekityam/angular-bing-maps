@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-polygonDirective.$inject = ['MapUtils'];
 function polygonDirective(MapUtils) {
     'use strict';
 
@@ -39,7 +38,7 @@ function polygonDirective(MapUtils) {
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(polygon);
         });
-        
+
         scope.$watch('events', function(events) {
             //Loop through each event handler
             angular.forEach(events, function(usersHandler, eventName) {

@@ -1,6 +1,5 @@
 /*global angular, Microsoft*/
 
-venueMapDirective.$inject = ['$timeout'];
 function venueMapDirective($timeout) {
     'use strict';
 
@@ -16,7 +15,7 @@ function venueMapDirective($timeout) {
             venue: '=?',
             room: '=?',
         },
-        controller: ['$scope', '$element', function ($scope, $element) {
+        controller: function ($scope, $element) {
             // Controllers get instantiated before link function is run, so instantiate the map in the Controller
             // so that it is available to child link functions
             this.map = new Microsoft.Maps.Map($element.children()[1], { credentials: $scope.credentials });
@@ -33,7 +32,7 @@ function venueMapDirective($timeout) {
             $scope.$watch('mapType', function (mapTypeId) {
                 $scope.map.setView({ animate: true, mapTypeId: mapTypeId });
             });
-       
+
 
             var venue;
 
@@ -53,8 +52,8 @@ function venueMapDirective($timeout) {
 
             function addDirectory() {
                 if (venue && venue.directory && venue.directory.isInDOM()) {
-                    // Using the $timeout object here to add a zero length wait to ensure 
-                    // the directory is added to the DOM this ensures that the directory 
+                    // Using the $timeout object here to add a zero length wait to ensure
+                    // the directory is added to the DOM this ensures that the directory
                     // links are in the DOM to be clicked
                     $timeout(function() {
                         if (typeof($scope.room) !== 'undefined' && $scope.room !== null) {
@@ -84,8 +83,8 @@ function venueMapDirective($timeout) {
                         venue.directory.createUIElements();
                     }
 
-                    venue.directory.addToDOM($element.children()[0], 
-                                            Microsoft.Maps.VenueMaps.DirectorySortOrder.byFloor, 
+                    venue.directory.addToDOM($element.children()[0],
+                                            Microsoft.Maps.VenueMaps.DirectorySortOrder.byFloor,
                                             Microsoft.Maps.VenueMaps.DirectoryGrouping.none);
                     venue.directory.setHeight(1.0);
 
@@ -102,7 +101,7 @@ function venueMapDirective($timeout) {
             }
 
             Microsoft.Maps.loadModule('Microsoft.Maps.VenueMaps', { callback: venueMapModuleReady });
-        }]
+        }
     };
 }
 

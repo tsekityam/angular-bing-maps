@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-pushpinDirective.$inject = [];
 function pushpinDirective() {
     'use strict';
 
@@ -64,8 +63,6 @@ function pushpinDirective() {
             });
         });
     }
-
-
 
     return {
         link: link,

@@ -11,7 +11,7 @@
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
@@ -29,7 +29,7 @@
                 $scope.drawing.currentShape = null;
                 $scope.drawing.fillColor = 'rgba(131, 71, 71, 0.52)';
                 $scope.drawing.strokeColor = '#000';
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -50,7 +50,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <!--  IMPORTANT: Remember to include the DrawingTools module from /BingMapModules/DrawingTools/DrawingToolsModule.js -->
         <!--  If you use the built-in drawing controls, remember to include /BingMapModules/DrawingTools/DrawingToolsModule.css -->

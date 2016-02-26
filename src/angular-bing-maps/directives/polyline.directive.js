@@ -1,6 +1,5 @@
 /*global angular, Microsoft, DrawingTools, console*/
 
-polylineDirective.$inject = ['MapUtils'];
 function polylineDirective(MapUtils) {
     'use strict';
 
