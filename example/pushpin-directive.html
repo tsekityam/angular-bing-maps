@@ -7,7 +7,7 @@
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
@@ -21,13 +21,17 @@
                 $scope.pushpin.options = {
                     draggable: true
                 }
+                $scope.pushpin.data= {
+                    text: 'Hello World!'
+                };
                 $scope.pushpin.events = {
-                    click: function() {
-                        alert('The click event is working fine!')
+                    click: function(eventData) {
+                        var data = eventData.target.pushpinData;
+                        alert('The click event is working fine! Here is the data: ' + data.text)
                     }
                 };
 
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -38,7 +42,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map
@@ -51,7 +55,8 @@
                     lat="pushpin.location.latitude"
                     lng="pushpin.location.longitude"
                     options="pushpin.options"
-                    events="pushpin.events">
+                    events="pushpin.events",
+                    pushpin-data="pushpin.data">
                 </pushpin>
 
             </bing-map>

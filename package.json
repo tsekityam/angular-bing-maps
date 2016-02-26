@@ -1,6 +1,6 @@
 {
   "name": "angular-bing-maps",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": {
     "name": "Stephen Morrow",
     "email": "smorrow@credera.com"
@@ -16,6 +16,7 @@
     "gulp-concat": "^2.3.4",
     "gulp-jshint": "^1.8.4",
     "gulp-notify": "^2.2.0",
+    "gulp-ng-annotate": "^1.1.0",
     "gulp-plumber": "^0.6.6",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^1.4.1",

@@ -8,7 +8,7 @@
 
         <script type="text/javascript">
             var app = angular.module('angularBingMapExample', ['angularBingMaps']);
-            app.controller('ExampleController', function($scope, $http) {
+            app.controller('ExampleController', ['$scope', '$http', function($scope, $http) {
 
                 /*<bing-map> directive options*/
                 $scope.mapOptions = {};
@@ -19,7 +19,7 @@
                 $scope.polyline = {};
                 $scope.polyline.locations = [{"latitude":34.86400954439419,"longitude":-90.27786287499998},{"latitude":31.948133803753898,"longitude":-90.16799959374998},{"latitude":31.873525941061587,"longitude":-91.20071443749998},{"latitude":31.948133803753898,"longitude":-89.00344881249998},{"latitude":32.004049978763646,"longitude":-90.21194490624998},{"latitude":35.00811346319084,"longitude":-90.32180818749998},{"latitude":34.97211122247478,"longitude":-88.98147615624998},{"latitude":34.990114322142375,"longitude":-91.50833162499998},{"latitude":34.990114322142375,"longitude":-91.48635896874998}];
                 $scope.polyline.strokeColor = '#4d1010';
-            });
+            }]);
         </script>
 
         <style type="text/css">
@@ -30,7 +30,7 @@
         </style>
 
     </head>
-    <body ng-app="angularBingMapExample">
+    <body ng-app="angularBingMapExample" ng-strict-di>
 
         <div class="bing-map-container" ng-controller="ExampleController">
             <bing-map

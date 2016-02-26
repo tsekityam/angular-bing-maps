@@ -8,7 +8,7 @@ function drawingToolsDirective(MapUtils) {
             console.log('You did not include DrawingToolsModule.js. Please include this script and try again');
             return;
         }
-        
+
         var options = {
             events: {
                 drawingEnded: function (shapes) {
@@ -36,10 +36,10 @@ function drawingToolsDirective(MapUtils) {
             }
             scope.drawingManager.setOptions(options);
         }
-        
+
         scope.drawingManager = new DrawingTools.DrawingManager(mapCtrl.map);
         setOptions();
-        
+
         scope.$watch('drawThisShape', function (shape) {
             if (shape === 'none') {
                 scope.drawingManager.setDrawingMode(null);
@@ -47,7 +47,7 @@ function drawingToolsDirective(MapUtils) {
                 scope.drawingManager.setDrawingMode(shape);
             }
         });
-        
+
         scope.$on('DRAWINGTOOLS.CLEAR', function() {
             scope.drawingManager.clear();
         });

@@ -4,7 +4,7 @@ function pushpinDirective() {
     'use strict';
 
     function link(scope, element, attrs, mapCtrl) {
-        
+
         var eventHandlers = {};
 
         function updatePosition() {
@@ -20,6 +20,9 @@ function pushpinDirective() {
         scope.$watch('lng', updatePosition);
         scope.$watch('options', function (newOptions) {
             scope.pin.setOptions(newOptions);
+        });
+        scope.$watch('pushpinData', function (newPushpinData) {
+            scope.pin.pushpinData = newPushpinData;
         });
         scope.$watch('events', function(events) {
             //Loop through each event handler
@@ -61,14 +64,12 @@ function pushpinDirective() {
         });
     }
 
-
-
     return {
         link: link,
-        controller: function ($scope) {
+        controller: ['$scope', function ($scope) {
             this.pin = new Microsoft.Maps.Pushpin();
             $scope.pin = this.pin;
-        },
+        }],
         template: '<div ng-transclude></div>',
         restrict: 'EA',
         transclude: true,
@@ -77,7 +78,8 @@ function pushpinDirective() {
             lat: '=',
             lng: '=',
             events: '=?',
-            trackBy: '=?'
+            trackBy: '=?',
+            pushpinData: '=?'
         },
         require: '^bingMap'
     };

@@ -38,7 +38,7 @@ function polygonDirective(MapUtils) {
         scope.$on('$destroy', function() {
             mapCtrl.map.entities.remove(polygon);
         });
-        
+
         scope.$watch('events', function(events) {
             //Loop through each event handler
             angular.forEach(events, function(usersHandler, eventName) {
@@ -75,4 +75,4 @@ function polygonDirective(MapUtils) {
 
 }
 
-angular.module('angularBingMaps.directives').directive('polygon', polygonDirective);
+angular.module('angularBingMaps.directives').directive('abmPolygon', polygonDirective);

@@ -25,7 +25,7 @@ Proper documentation is in our road map, but currently not implemented. Please v
   * [`<bing-map>`](example/bing-map-directive.html)
   * [`<pushpin>`](example/pushpin-directive.html)
   * [`<infobox>`](example/infobox-directive.html)
-  * [`<polygon>`](example/polygon-directive.html)
+  * [`<abm-polygon>`](example/polygon-directive.html)
   * [`<polyline>`](example/polyline-directive.html)
   * [`<tile-layer>`](example/tile-layer-directive.html)
   * [`<venue-map>`](example/bing-venue-map-directive.html)

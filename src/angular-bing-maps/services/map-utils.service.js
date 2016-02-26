@@ -38,7 +38,7 @@ function mapUtilsService($q) {
         }
         return bingLocations;
     }
-    
+
     function flattenEntityCollection(ec) {
         var flat = flattenEntityCollectionRecursive(ec);
         var flatEc = new Microsoft.Maps.EntityCollection();
@@ -49,7 +49,7 @@ function mapUtilsService($q) {
         }
         return flatEc;
     }
-    
+
     function flattenEntityCollectionRecursive(ec) {
         var flat = [];
         var entity = ec.pop();
@@ -63,7 +63,7 @@ function mapUtilsService($q) {
         }
         return flat;
     }
-    
+
     function loadAdvancedShapesModule() {
         var defered = $q.defer();
         if(!advancedShapesLoaded) {
