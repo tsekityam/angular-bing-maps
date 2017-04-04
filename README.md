@@ -1,10 +1,10 @@
 # Angular Bing Maps
 [![Join the chat at https://gitter.im/Credera/angular-bing-maps](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Credera/angular-bing-maps?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-##Project Status
+## Project Status
 Angular Bing Maps is a project that Credera developed as part of a client engagement. All requirements / features were initially driven by client needs, but we are now accepting features from the community. Feel free to submit issues and feature requests. See "Contributing" section below for instructions on how to make changes and submit PRs.
 
-##Getting Started
+## Getting Started
   1. Obtain source code for angular-bing-maps
     * Via Bower `bower install angular-bing-maps --save`
     * Via git `git clone git@github.com:Credera/angular-bing-maps.git`
@@ -18,7 +18,7 @@ Angular Bing Maps is a project that Credera developed as part of a client engage
     * Please see `/example/bing-map-directive.html` for a basic example. 
     * NOTE: Please register for your own Bing Maps API key at https://www.bingmapsportal.com. Login with your Windows Live account and click 'My Account' -> 'Create or view your keys'
 
-##Documentation
+## Documentation
 Proper documentation is in our road map, but currently not implemented. Please view [/examples](example) for example usage of each directive.
 
 ### List of available directives
@@ -38,9 +38,9 @@ Proper documentation is in our road map, but currently not implemented. Please v
 
 :star: - Third party modules must be manually included in addition to angular-bing-maps.js. Please use modules found inside this repository under /BingMapModules/{{moduleName}}
 
-##Contributing
+## Contributing
 Feel free to submit PR's for features, but please submit all PR's as candidates for the "develop" branch. Our "master" branch contains the latest stable release.
-###Developer Setup
+### Developer Setup
 To begin contributing to angular-bing-maps:
  1. Fork it
  2. Clone your fork
