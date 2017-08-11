@@ -11,6 +11,7 @@ function bingMapDirective(angularBingMaps) {
             credentials: '=',
             center: '=?',
             zoom: '=?',
+            bounds: '=?',
             mapType: '=?',
             events: '=?',
             options: '=?',
@@ -61,6 +62,10 @@ function bingMapDirective(angularBingMaps) {
 
             $scope.$watch('zoom', function (zoom) {
                 $scope.map.setView({animate: true, zoom: zoom});
+            });
+
+            $scope.$watch('bounds', function (bounds) {
+                $scope.map.setView({animate: true, bounds: bounds});
             });
 
             $scope.$watch('mapType', function (mapTypeId) {

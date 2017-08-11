@@ -11,6 +11,7 @@ function venueMapDirective($timeout) {
             credentials: '=',
             center: '=?',
             zoom: '=?',
+            bounds: '=?',
             mapType: '=?',
             venue: '=?',
             room: '=?',
@@ -27,6 +28,10 @@ function venueMapDirective($timeout) {
 
             $scope.$watch('zoom', function (zoom) {
                 $scope.map.setView({ animate: true, zoom: zoom });
+            });
+
+            $scope.$watch('bounds', function (bounds) {
+                $scope.map.setView({ animate: true, bounds: bounds });
             });
 
             $scope.$watch('mapType', function (mapTypeId) {

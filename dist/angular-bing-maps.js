@@ -1,12 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
+mapUtilsService.$inject = ['$q'];
 drawingToolsDirective.$inject = ['MapUtils'];
 bingMapDirective.$inject = ['angularBingMaps'];
 polygonDirective.$inject = ['MapUtils'];
 polylineDirective.$inject = ['MapUtils'];
 venueMapDirective.$inject = ['$timeout'];
-wktDirective.$inject = ['MapUtils'];
-mapUtilsService.$inject = ['$q'];(function () {
+wktDirective.$inject = ['MapUtils'];(function () {
 
   // Create all modules and define dependencies to make sure they exist
   // and are loaded in the correct order to satisfy dependency injection
@@ -76,6 +76,96 @@ function angularBingMapsProvider() {
 }
 
 angular.module('angularBingMaps.providers').provider('angularBingMaps', angularBingMapsProvider);
+
+/*global angular, Microsoft, DrawingTools, console*/
+
+function mapUtilsService($q) {
+    'use strict';
+    var color = require('color');
+    var advancedShapesLoaded = false;
+
+    function makeMicrosoftColor(colorStr) {
+        var c = color(colorStr);
+        return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
+    }
+
+    function makeMicrosoftLatLng(location) {
+        if (angular.isArray(location)) {
+            return new Microsoft.Maps.Location(location[1], location[0]);
+        } else if (location.hasOwnProperty('latitude') && location.hasOwnProperty('longitude')) {
+            return new Microsoft.Maps.Location(location.latitude, location.longitude);
+        } else if (location.hasOwnProperty('lat') && location.hasOwnProperty('lng')) {
+            return new Microsoft.Maps.Location(location.lat, location.lng);
+        } else {
+            if(console && console.error) {
+                console.error('Your coordinates are in a non-standard form. '+
+                              'Please refer to the Angular Bing Maps '+
+                              'documentation to see supported coordinate formats');
+            }
+            return null;
+        }
+    }
+
+    function convertToMicrosoftLatLngs(locations) {
+        var bingLocations = [];
+        if (!locations) {
+            return bingLocations;
+        }
+        for (var i=0;i<locations.length;i++) {
+            var latLng = makeMicrosoftLatLng(locations[i]);
+            bingLocations.push(latLng);
+        }
+        return bingLocations;
+    }
+
+    function flattenEntityCollection(ec) {
+        var flat = flattenEntityCollectionRecursive(ec);
+        var flatEc = new Microsoft.Maps.EntityCollection();
+        var entity = flat.pop();
+        while(entity) {
+            flatEc.push(entity);
+            entity = flat.pop();
+        }
+        return flatEc;
+    }
+
+    function flattenEntityCollectionRecursive(ec) {
+        var flat = [];
+        var entity = ec.pop();
+        while(entity) {
+            if (entity && !(entity instanceof Microsoft.Maps.EntityCollection)) {
+                flat.push(entity);
+            } else if (entity) {
+                flat.concat(flattenEntityCollectionRecursive(entity));
+            }
+            entity = ec.pop();
+        }
+        return flat;
+    }
+
+    function loadAdvancedShapesModule() {
+        var defered = $q.defer();
+        if(!advancedShapesLoaded) {
+            Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes', { callback: function(){
+                defered.resolve();
+            }});
+        } else {
+            defered.resolve();
+        }
+        return defered.promise;
+    }
+
+    return {
+        makeMicrosoftColor: makeMicrosoftColor,
+        makeMicrosoftLatLng: makeMicrosoftLatLng,
+        convertToMicrosoftLatLngs: convertToMicrosoftLatLngs,
+        flattenEntityCollection: flattenEntityCollection,
+        loadAdvancedShapesModule: loadAdvancedShapesModule
+    };
+
+}
+
+angular.module('angularBingMaps.services').service('MapUtils', mapUtilsService);
 
 /*global angular, Microsoft, DrawingTools, console*/
 
@@ -296,6 +386,7 @@ function bingMapDirective(angularBingMaps) {
             credentials: '=',
             center: '=?',
             zoom: '=?',
+            bounds: '=?',
             mapType: '=?',
             events: '=?',
             options: '=?',
@@ -346,6 +437,10 @@ function bingMapDirective(angularBingMaps) {
 
             $scope.$watch('zoom', function (zoom) {
                 $scope.map.setView({animate: true, zoom: zoom});
+            });
+
+            $scope.$watch('bounds', function (bounds) {
+                $scope.map.setView({animate: true, bounds: bounds});
             });
 
             $scope.$watch('mapType', function (mapTypeId) {
@@ -670,6 +765,7 @@ function venueMapDirective($timeout) {
             credentials: '=',
             center: '=?',
             zoom: '=?',
+            bounds: '=?',
             mapType: '=?',
             venue: '=?',
             room: '=?',
@@ -686,6 +782,10 @@ function venueMapDirective($timeout) {
 
             $scope.$watch('zoom', function (zoom) {
                 $scope.map.setView({ animate: true, zoom: zoom });
+            });
+
+            $scope.$watch('bounds', function (bounds) {
+                $scope.map.setView({ animate: true, bounds: bounds });
             });
 
             $scope.$watch('mapType', function (mapTypeId) {
@@ -883,96 +983,6 @@ function wktDirective(MapUtils) {
 }
 
 angular.module('angularBingMaps.directives').directive('wkt', wktDirective);
-
-/*global angular, Microsoft, DrawingTools, console*/
-
-function mapUtilsService($q) {
-    'use strict';
-    var color = require('color');
-    var advancedShapesLoaded = false;
-
-    function makeMicrosoftColor(colorStr) {
-        var c = color(colorStr);
-        return new Microsoft.Maps.Color(Math.floor(255*c.alpha()), c.red(), c.green(), c.blue());
-    }
-
-    function makeMicrosoftLatLng(location) {
-        if (angular.isArray(location)) {
-            return new Microsoft.Maps.Location(location[1], location[0]);
-        } else if (location.hasOwnProperty('latitude') && location.hasOwnProperty('longitude')) {
-            return new Microsoft.Maps.Location(location.latitude, location.longitude);
-        } else if (location.hasOwnProperty('lat') && location.hasOwnProperty('lng')) {
-            return new Microsoft.Maps.Location(location.lat, location.lng);
-        } else {
-            if(console && console.error) {
-                console.error('Your coordinates are in a non-standard form. '+
-                              'Please refer to the Angular Bing Maps '+
-                              'documentation to see supported coordinate formats');
-            }
-            return null;
-        }
-    }
-
-    function convertToMicrosoftLatLngs(locations) {
-        var bingLocations = [];
-        if (!locations) {
-            return bingLocations;
-        }
-        for (var i=0;i<locations.length;i++) {
-            var latLng = makeMicrosoftLatLng(locations[i]);
-            bingLocations.push(latLng);
-        }
-        return bingLocations;
-    }
-
-    function flattenEntityCollection(ec) {
-        var flat = flattenEntityCollectionRecursive(ec);
-        var flatEc = new Microsoft.Maps.EntityCollection();
-        var entity = flat.pop();
-        while(entity) {
-            flatEc.push(entity);
-            entity = flat.pop();
-        }
-        return flatEc;
-    }
-
-    function flattenEntityCollectionRecursive(ec) {
-        var flat = [];
-        var entity = ec.pop();
-        while(entity) {
-            if (entity && !(entity instanceof Microsoft.Maps.EntityCollection)) {
-                flat.push(entity);
-            } else if (entity) {
-                flat.concat(flattenEntityCollectionRecursive(entity));
-            }
-            entity = ec.pop();
-        }
-        return flat;
-    }
-
-    function loadAdvancedShapesModule() {
-        var defered = $q.defer();
-        if(!advancedShapesLoaded) {
-            Microsoft.Maps.loadModule('Microsoft.Maps.AdvancedShapes', { callback: function(){
-                defered.resolve();
-            }});
-        } else {
-            defered.resolve();
-        }
-        return defered.promise;
-    }
-
-    return {
-        makeMicrosoftColor: makeMicrosoftColor,
-        makeMicrosoftLatLng: makeMicrosoftLatLng,
-        convertToMicrosoftLatLngs: convertToMicrosoftLatLngs,
-        flattenEntityCollection: flattenEntityCollection,
-        loadAdvancedShapesModule: loadAdvancedShapesModule
-    };
-
-}
-
-angular.module('angularBingMaps.services').service('MapUtils', mapUtilsService);
 
 },{"color":6}],2:[function(require,module,exports){
 /* MIT license */
